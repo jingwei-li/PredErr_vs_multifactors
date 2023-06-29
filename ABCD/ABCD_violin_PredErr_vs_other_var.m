@@ -1,6 +1,6 @@
 function ABCD_violin_PredErr_vs_other_var(Xdata, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, titles, threshold)
 
-addpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 if(~exist('threshold', 'var'))
     threshold = 0.5;
@@ -11,9 +11,9 @@ colors = [172, 146, 235; ...
           160, 213, 104; ...
           255, 206, 84; ...
           237, 85, 100]./255;
-Xclasses = unique(Xdata(~isnan(Xdata)));
-if(length(Xclasses) > 5)
-    colors = repmat(linspace(0,1,length(Xclasses))', 1, 3);
+Xclasses_orig = unique(Xdata(~isnan(Xdata)));
+if(length(Xclasses_orig) > 5)
+    colors = repmat(linspace(0,1,length(Xclasses_orig))', 1, 3);
 end
 
 N = length(fieldnames(err_avg));
@@ -21,7 +21,7 @@ row = floor(sqrt(N));
 col = ceil(N/row);
 
 f = figure;
-if(length(Xclasses)<=5)
+if(length(Xclasses_orig)<=5)
     set(gcf, 'position', [0 0 400*col 350*row])
 else
     set(gcf, 'position', [0 0 900*col 350*row])
@@ -56,6 +56,7 @@ for c = 1:N
         end
     end
     Ydata = nan(maxL, length(Xclasses));
+    [~,~,XTickLabels_idx] = intersect(Xclasses, Xclasses_orig, 'stable');
     
     Ydata_anova = [];
     grp_anova = [];
@@ -95,7 +96,7 @@ for c = 1:N
     xlabel(Xlabel, 'fontsize', 12);
     ylabel(Ylabel, 'fontsize', 12);
     title(titles{c}, 'fontsize', 12, 'linewidth', 2)
-    set(gca, 'XTickLabel', XTickLabels, 'fontsize', 12)
+    set(gca, 'XTickLabel', XTickLabels(XTickLabels_idx), 'fontsize', 12)
     if(length(Xclasses) > 5)
         rotateXLabels( gca(), 30 );
     end
@@ -112,6 +113,6 @@ hgexport(f, outname)
 close
 
 
-rmpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 end
