@@ -56,7 +56,7 @@ case 'handedness'
     Ylabel = 'Prediction error (abs)';
     XTickLabels = {'R', 'L'};
     outbase = 'PredErr_vs_handedness';
-    ABCD_violin_PredErr_vs_other_var(handedness, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 0.1)
+    ABCD_violin_PredErr_vs_other_var(handedness, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 case 'prt_educ'
     educ_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -149,7 +149,7 @@ case 'prt_educ'
     Xlabel = peduc_colloquial{2};
     Ylabel = 'Prediction error (abs)';
     outbase = 'PredErr_vs_Prt2_Educ';
-    %ABCD_violin_PredErr_vs_other_var(peduc(:,2), err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 0.1)
+    ABCD_violin_PredErr_vs_other_var(peduc(:,2), err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 case 'income'
     income_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -181,7 +181,7 @@ case 'income'
     Xlabel = 'Household income';
     Ylabel = 'Prediction error (abs)';
     outbase = 'PredErr_vs_income';
-    ABCD_violin_PredErr_vs_other_var(income, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 0.1)
+    ABCD_violin_PredErr_vs_other_var(income, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 case 'address_size'
     size_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -203,7 +203,7 @@ case 'address_size'
     Xlabel = '#People living at parent''s address';
     Ylabel = 'Prediction error(abs)';
     outbase = 'PredErr_vs_AddrSize';
-    ABCD_violin_PredErr_vs_other_var(add_size, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 0.1)
+    ABCD_violin_PredErr_vs_other_var(add_size, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 case 'ethnicity'
     ethn_relpath = 'acspsw03.txt';
     cd(csv_dir)
@@ -226,7 +226,7 @@ case 'ethnicity'
     Xlabel = 'Ethnicity';
     Ylabel = 'Prediction error(abs)';
     outbase = 'PredErr_vs_ethnicity';
-    ABCD_violin_PredErr_vs_other_var(ethnicity, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 0.25)
+    ABCD_violin_PredErr_vs_other_var(ethnicity, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 case 'age'
     age_relpath = 'abcd_lt01.txt';
     cd(csv_dir)
@@ -277,7 +277,7 @@ case 'sex'
     Xlabel = 'Sex';
     Ylabel = 'Prediction error(abs)';
     outbase = 'PredErr_vs_sex';
-    ABCD_violin_PredErr_vs_other_var(sex, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, -0.25)
+    ABCD_violin_PredErr_vs_other_var(sex, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 
 otherwise
     error('Unknown metric: %s', metric)
@@ -294,7 +294,7 @@ function ABCD_stack_bar(Xdata, Ydata, outdir, outbase, XTickLabels, Xlabel, Ylab
 %
 % 
 
-addpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 colors = [172, 146, 235; ...
           79, 193, 232; ...
@@ -337,6 +337,6 @@ set(gcf, 'color', 'w')
 hgexport(f, outname)
 close
 
-rmpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 end

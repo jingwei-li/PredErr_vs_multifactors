@@ -34,11 +34,11 @@ DV = d.DVARS(idx);
 
 Ylabel = 'FD';
 outbase = 'PredErr_vs_FD';
-ABCD_scatter_PredErr_vs_other_var(err_avg, FD, outdir, outbase, Xlabels, Ylabel, -0.5)
+ABCD_scatter_PredErr_vs_other_var(err_avg, FD, outdir, outbase, Xlabels, Ylabel, 1)
 
 Ylabel = 'log(FD)';
 outbase = 'PredErr_vs_logFD';
-ABCD_scatter_PredErr_vs_other_var(err_avg, log(FD), outdir, outbase, Xlabels, Ylabel, -0.5)
+ABCD_scatter_PredErr_vs_other_var(err_avg, log(FD), outdir, outbase, Xlabels, Ylabel, 1)
 
 Ylabel = 'DVARS';
 outbase = 'PredErr_vs_DV';

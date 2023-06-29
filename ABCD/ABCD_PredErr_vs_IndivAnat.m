@@ -60,11 +60,11 @@ case 'Euler'
 
     Ylabel = 'Euler characteristic';
     outbase = 'PredErr_vs_Euler';
-    ABCD_scatter_PredErr_vs_other_var(err_avg, euler, outdir, outbase, Xlabels, Ylabel, -0.25)
+    ABCD_scatter_PredErr_vs_other_var(err_avg, euler, outdir, outbase, Xlabels, Ylabel, 1)
 
     Ylabel = 'log( - Euler characteristic)';
     outbase = 'PredErr_vs_log-Euler';
-    ABCD_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, -0.25)
+    ABCD_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, 1)
 case 'ICV'
     [subj_ls, my_csv] = internal.stats.parseArgs({'subj_ls', 'csv'}, ...
         {'/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/subjects_pass_rs_pass_pheno.txt', ...
@@ -76,7 +76,7 @@ case 'ICV'
 
     Ylabel = 'ICV';
     outbase = 'PredErr_vs_ICV';
-    ABCD_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 0.1)
+    ABCD_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 1)
 case 'talxfm'
     [x_path, y_path, z_path] = internal.stats.parseArgs({'x','y','z'}, {[],[],[]}, varargin{:});
     scaling = dlmread(x_path);
