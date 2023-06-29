@@ -1,6 +1,6 @@
 function ABCD_scatter_PredErr_vs_other_var(err_avg, Ydata, outdir, outbase, Xlabels, Ylabel, threshold)
 
-    addpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+    addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
     if(~exist('threshold', 'var'))
         threshold = 0.5;
@@ -62,6 +62,6 @@ function ABCD_scatter_PredErr_vs_other_var(err_avg, Ydata, outdir, outbase, Xlab
     hgexport(f, outname)
     close
 
-    rmpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+    rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 end

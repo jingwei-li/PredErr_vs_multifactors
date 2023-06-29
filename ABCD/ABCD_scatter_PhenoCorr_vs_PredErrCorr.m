@@ -4,7 +4,7 @@ function ABCD_scatter_PhenoCorr_vs_PredErrCorr(PhenoCorr_mat, PredErrCorr_mat, o
 %
 % 
 
-addpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 load(PhenoCorr_mat)
 load(PredErrCorr_mat)
@@ -62,6 +62,6 @@ for c = 1:2
     close
 end
 
-rmpath(genpath('/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/Unfairness_ABCD_process/external_packages/fig_util'))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
     
 end

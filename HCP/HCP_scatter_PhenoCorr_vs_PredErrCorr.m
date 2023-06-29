@@ -3,7 +3,7 @@ function HCP_scatter_PhenoCorr_vs_PredErrCorr(PhenoCorr_mat, PredErrCorr_mat, ou
 % HCP_scatter_PhenoCorr_vs_PredErrCorr(PhenoCorr_mat, PredErrCorr_mat, outpng)
 %
 % 
-addpath(genpath('/home/jli/my_projects/fairAI/from_sg/HCP_race/scripts/Unfairness_HCP_process/external_packages/fig_util'))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 load(PhenoCorr_mat)
 load(PredErrCorr_mat)
@@ -70,6 +70,6 @@ for c = 1:2
 
 end
 
-rmpath(genpath('/home/jli/my_projects/fairAI/from_sg/HCP_race/scripts/Unfairness_HCP_process/external_packages/fig_util'))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
     
 end
