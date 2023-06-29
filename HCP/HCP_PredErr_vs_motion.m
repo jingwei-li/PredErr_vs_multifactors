@@ -31,14 +31,14 @@ load(avgPredErr)
 
 Ylabel = 'FD';
 outbase = 'PredErr_vs_FD';
-HCP_scatter_PredErr_vs_other_var(err_avg, FD, outdir, outbase, Xlabels, Ylabel, -0.5)
+HCP_scatter_PredErr_vs_other_var(err_avg, FD, outdir, outbase, Xlabels, Ylabel, 1)
 
 Ylabel = 'log(FD)';
 outbase = 'PredErr_vs_logFD';
-HCP_scatter_PredErr_vs_other_var(err_avg, log(FD), outdir, outbase, Xlabels, Ylabel, -0.5)
+HCP_scatter_PredErr_vs_other_var(err_avg, log(FD), outdir, outbase, Xlabels, Ylabel, 1)
 
 Ylabel = 'DVARS';
 outbase = 'PredErr_vs_DV';
-HCP_scatter_PredErr_vs_other_var(err_avg, DV, outdir, outbase, Xlabels, Ylabel, -0.5)
+HCP_scatter_PredErr_vs_other_var(err_avg, DV, outdir, outbase, Xlabels, Ylabel, 1)
     
 end

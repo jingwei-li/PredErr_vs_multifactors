@@ -45,11 +45,11 @@ case 'Euler'
 
     Ylabel = 'Euler characteristic';
     outbase = 'PredErr_vs_Euler';
-    HCP_scatter_PredErr_vs_other_var(err_avg, euler, outdir, outbase, Xlabels, Ylabel, 0.1)
+    HCP_scatter_PredErr_vs_other_var(err_avg, euler, outdir, outbase, Xlabels, Ylabel, 1)
 
     Ylabel = 'log( - Euler characteristic)';
     outbase = 'PredErr_vs_log-Euler';
-    HCP_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, 0.1)
+    HCP_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, 1)
 case 'ICV'
     [subj_ls, csv] = internal.stats.parseArgs({'subj_ls', 'csv'}, ...
         {'/home/jli/my_projects/fairAI/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt', ...
@@ -61,7 +61,7 @@ case 'ICV'
 
     Ylabel = 'ICV';
     outbase = 'PredErr_vs_ICV';
-    HCP_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 0.1)
+    HCP_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 1)
 otherwise
     error('Unknown metric: %s', anat_metric)
 end
