@@ -28,9 +28,13 @@ function ABCD_PredErr_vs_IndivAnat(avgPredErr, outdir, Xlabels, anat_metric, var
 %
 %  varargin:
 %    If 'Euler' is used, varargin should contain the full paths to the list of individuals' Euler 
-%    characteristics for left and right hemispheres separately. 
+%    characteristics for left and right hemispheres separately. Moreoever, for preprocessing Euler
+%    characteristics, the subject list, and a csv file contains the site information should also 
+%    be passed in.
 %    For example, (..., 'lh', '/home/xxx/lh.subjects_pass_rs_pass_pheno.txt', 
-%                  'rh', '/home/xxx/rh.subjects_pass_rs_pass_pheno.txt')
+%                  'rh', '/home/xxx/rh.subjects_pass_rs_pass_pheno.txt',
+%                  'subj_ls', '/home/xxx/subjects_pass_rs_pass_pheno.txt',
+%                  'site_csv', '/home/xxx/phenotypes_pass_rs.txt')
 %
 %    If 'talxfm' is used, varargin should contain the full paths to the list of individuals' scaling 
 %    factors along each of the three dimensions.  X: left-right; Y: inferior-superior; Z: anterior-posterior
@@ -53,25 +57,42 @@ load(avgPredErr)
 
 switch anat_metric
 case 'Euler'
-    [lh_path, rh_path] = internal.stats.parseArgs({'lh', 'rh'}, {[],[]}, varargin{:});
+    [lh_path, rh_path, subj_ls, site_csv] = ...
+        internal.stats.parseArgs({'lh', 'rh', 'subj_ls', 'site_csv'}, {[],[], ...
+        '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/subjects_pass_rs_pass_pheno.txt', ...
+        '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/phenotypes_pass_rs.txt'}, varargin{:});
     lh_euler = dlmread(lh_path);
     rh_euler = dlmread(rh_path);
     euler = (lh_euler + rh_euler) ./ 2;
 
-    Ylabel = 'Euler characteristic';
-    outbase = 'PredErr_vs_Euler';
-    ABCD_scatter_PredErr_vs_other_var(err_avg, euler, outdir, outbase, Xlabels, Ylabel, 1)
+    % centering within each site, taking square root, and multipling by -1
+    d = readtable(site_csv);
+    [subjects, nsub] = CBIG_text2cell(subj_ls);
+    [~, ~, idx] = intersect(subjects, d.subjectkey, 'stable');
+    site = d.site(idx);
+    uq_st = unique(site);
+    euler_proc = zeros(size(euler));
+    for s = 1:length(uq_st)
+        euler_st = euler(strcmp(site, uq_st{s}));
+        euler_proc(strcmp(site, uq_st{s})) = euler_st - median(euler_st);
+    end
+    %euler_proc = sign(euler_proc) .* sqrt(abs(euler_proc));
+    %euler_proc(euler_proc >10) = nan;
 
-    Ylabel = 'log( - Euler characteristic)';
-    outbase = 'PredErr_vs_log-Euler';
-    ABCD_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, 1)
+    Ylabel = 'Euler characteristic (centered per site)';
+    outbase = 'PredErr_vs_Euler';
+    ABCD_scatter_PredErr_vs_other_var(err_avg, euler_proc, outdir, outbase, Xlabels, Ylabel, 1)
+
+    %Ylabel = 'log( - Euler characteristic)';
+    %outbase = 'PredErr_vs_log-Euler';
+    %ABCD_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, 1)
 case 'ICV'
     [subj_ls, my_csv] = internal.stats.parseArgs({'subj_ls', 'csv'}, ...
         {'/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/subjects_pass_rs_pass_pheno.txt', ...
         '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/phenotypes_pass_rs.txt'}, varargin{:});
     d = readtable(my_csv);
     [subjects, nsub] = CBIG_text2cell(subj_ls);
-    [~, ~, idx] = intersect(subjects, d.(subj_hdr), 'stable');
+    [~, ~, idx] = intersect(subjects, d.subjectkey, 'stable');
     ICV = d.ICV(idx);
 
     Ylabel = 'ICV';
