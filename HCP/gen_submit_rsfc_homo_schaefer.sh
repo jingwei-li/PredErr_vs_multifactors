@@ -27,7 +27,7 @@ mkdir -p $outdir
 
 subj_ls=$proj_dir/HCP_race/scripts/lists/subjects_wIncome_948.txt
 outname=$outdir/homo_subjects_wIncome_948.mat
-printf "arguments = -singleCompThread -r rsfc_homo_schaefer(400,'$subj_ls','$HCP_dir','$outname')\n"
+printf "arguments = -singleCompThread -r HCP_rsfc_homo_schaefer(400,'$subj_ls','$HCP_dir','$outname')\n"
 printf "log       = ${LOGS_DIR}/\$(Cluster).\$(Process).${start}.log\n"
 printf "output    = ${LOGS_DIR}/\$(Cluster).\$(Process).${start}.out\n"
 printf "error     = ${LOGS_DIR}/\$(Cluster).\$(Process).${start}.err\n"
