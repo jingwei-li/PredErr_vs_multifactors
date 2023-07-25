@@ -69,6 +69,7 @@ for c = 1:N
     
     if(length(Xclasses) == 2)
         [H, p] = ttest2(Ydata(~isnan(Ydata(:,1)),1), Ydata(~isnan(Ydata(:,2)),2));
+        [HF, pf] = vartest2(Ydata(~isnan(Ydata(:,1)),1), Ydata(~isnan(Ydata(:,2)),2));
     else
         [p, anovatab, stats] = anova1(Ydata_anova, grp_anova, 'off');
         fprintf('ANOVA table for %s\n', titles{c})
@@ -88,7 +89,8 @@ for c = 1:N
     Xlims = get(gca, 'xlim');
     Ylims = get(gca, 'ylim');
     if(length(Xclasses) == 2)
-        text(mean(Xlims)-0.28, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+        text(mean(Xlims)-0.28, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('T-test p = %.2e', p), 'fontsize', 11)
+        text(mean(Xlims)-0.28, Ylims(2)-0.08*(Ylims(2)-Ylims(1)), sprintf('F-test p = %.2e', pf), 'fontsize', 11)
     else
         text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
     end

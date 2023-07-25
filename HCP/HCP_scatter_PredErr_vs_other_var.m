@@ -1,4 +1,4 @@
-function ABCD_scatter_PredErr_vs_other_var(err_avg, Ydata, outdir, outbase, Xlabels, Ylabel, threshold)
+function HCP_scatter_PredErr_vs_other_var(err_avg, Ydata, outdir, outbase, Xlabels, Ylabel, threshold)
 
     addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
