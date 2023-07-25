@@ -6,7 +6,7 @@ function HCP_PredErr_vs_sociodemograph(subj_ls, avgPredErr, outdir, bhvr_cls_nam
 %     A cell array contains the subtitles for each subplot which corresponds to a behavioral cluster. 
 %     The number of entries in `bhvr_cls_names` should be the same with the number of fields in the `err_arg` 
 %     structure passed in by `avgPredErr` variable.
-%     e.g. bhvr_cls_names = {'Cognitive flexibility, inhibition', 'Negative feelings', 'Positive feelings', 'Emotion recognition'};
+%     e.g. bhvr_cls_names = {'Cognitive control', 'Negative feelings', 'Positive feelings', 'Emotion recognition'};
    
 subjects = dlmread(subj_ls);
 nsub = length(subjects);
@@ -133,10 +133,30 @@ case 'menstruation'
     [~, ~, idx] = intersect(subjects, d.(subj_hdr), 'stable');
     mens = d.Menstrual_DaysSinceLast(idx);
 
+    mens_grp = nan(size(mens));
+    mens_grp(mens>=0 & mens<=5) = 1;
+    mens_grp(mens>5 & mens<=13) = 2;
+    mens_grp(mens==14) = 3;
+    mens_grp(mens>14 & mens<=35) = 4;
+    mens_grp(mens<0) = 5;
+    mens_grp(mens>35 ) = 6;
+    mens_grp(isnan(mens)) = nan;
+
+    XTickLabels = {'Menses (0-5)','Proliferative (5-13)', 'Ovulation (14)','Luteal (14-35)', ...
+        'Reported negative days', 'More than 35 days'};
+
     Xlabel = 'Days since last menstruation';
     Ylabel = 'Prediction error(abs)';
     outbase = 'PredErr_vs_menstruation';
-    HCP_scatter_PredErr_vs_other_var(err_avg, mens, outdir, outbase, bhvr_cls_names, Ylabel, 1)
+    HCP_violin_PredErr_vs_other_var(mens_grp, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+
+    %% birth control
+    contra = d.Menstrual_UsingBirthControl(idx);
+    XTickLabels = {'No', 'Yes'};
+    Xlabel = 'Birth control?';
+    Ylabel = 'Prediction error(abs)';
+    outbase = 'PredErr_vs_contraceptive';
+    HCP_violin_PredErr_vs_other_var(contra, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 case 'alcohol'
     csv = fullfile(csv_dir, 'RESTRICTED_jingweili_6_26_2023_1200subjects.csv');
     d = readtable(csv);
