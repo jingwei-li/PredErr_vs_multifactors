@@ -14,7 +14,8 @@ function HCP_PredErr_vs_IndivAnat(avgPredErr, outdir, Xlabels, anat_metric, vara
 %     A cell array contains the X-axis names for each behavioral cluster. The number of
 %     entries in `Xlabels` should be the same with the number of fields in the `err_arg` structure
 %     passed in by `avgPredErr` variable.
-%     Example: Xlabels = {'Cognitive flexibility, inhibition', 'Negative feelings', 'Positive feelings', 'Emotion recognition'};
+%     Example: Xlabels = {'Cognitive control', 'Negative feelings', 'Positive feelings', 'Emotion recognition'};
+%              Xlabels = {'Social cognition', 'Negative/Positive feelings', 'Emotion recognition'};
 %
 %   - anat_metric
 %     Choose between 'Euler' or 'ICV'. 

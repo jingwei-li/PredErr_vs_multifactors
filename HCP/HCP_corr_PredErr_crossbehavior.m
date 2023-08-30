@@ -33,7 +33,8 @@ for i = 1:seed_ub
                     curr_bhvr_nm{b}, 'y', ['fold_' num2str(f)], ['y_regress_' curr_bhvr_nm{b} '.mat']));
                 curr_yt(sub_fold(f).fold_index==1) = y_reg.y_resid(sub_fold(f).fold_index==1);
             end
-            err(:, IB(b), seed_counts(IB(b))) = curr_yt - curr_yp;
+            %err(:, IB(b), seed_counts(IB(b))) = curr_yt - curr_yp;
+            err(:, IB(b), seed_counts(IB(b))) = abs(curr_yt - curr_yp);
         end
     end
 end

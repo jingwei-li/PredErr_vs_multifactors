@@ -31,7 +31,8 @@ for b = 1:nbhvr
         curr_err_sum(sub_fold(f).fold_index==1) = curr_err_sum(sub_fold(f).fold_index==1) + curr_err;
         curr_sum(sub_fold(f).fold_index==1) = curr_sum(sub_fold(f).fold_index==1) + 1;
     end
-    err(:, b) = curr_err_sum ./ curr_sum;
+    %err(:, b) = curr_err_sum ./ curr_sum;
+    err(:, b) = abs(curr_err_sum ./ curr_sum);
 end
 
 pair = 1;
