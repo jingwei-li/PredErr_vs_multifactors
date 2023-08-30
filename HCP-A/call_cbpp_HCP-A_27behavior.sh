@@ -1,6 +1,6 @@
 #! /usr/bin/env bash
-# This script runs the unit test for this repository
-# Jianxiao Wu, last edited on 03-Apr-2020
+# Adapted from CBPP unit test script written by Jianxiao Wu
+# Modified by Jingwei Li, Jul. 2023
 
 ###########################################
 # Define paths

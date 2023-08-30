@@ -28,11 +28,9 @@ outdir=$proj_dir/new_results/HCP-A/cbpp
 list=$DIR/lists/colloquial_list.txt
 
 while IFS= read -r line; do
-if [[ "$line" == "Perceived Rejection" ]]; then
     printf "arguments = \"-i $in_mat -o $outdir -t '$line'\" \n"
     printf "log       = $LOGS_DIR/call_cbpp_HCP-A_\$(Cluster).\$(Process).log \n"
     printf "output    = $LOGS_DIR/call_cbpp_HCP-A_\$(Cluster).\$(Process).out \n"
     printf "error     = $LOGS_DIR/call_cbpp_HCP-A_\$(Cluster).\$(Process).err \n"
     printf "Queue\n\n"
-fi
 done < $list
