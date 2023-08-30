@@ -1,9 +1,9 @@
-function ABCD_violin_PredErr_vs_other_var(Xdata, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, titles, threshold)
+function ABCD_violin_PredErr_vs_other_var(Xdata, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, titles, threshold, factor_site)
 
 addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 if(~exist('threshold', 'var'))
-    threshold = 0.5;
+    threshold = 1;
 end
 
 colors = [172, 146, 235; ...
@@ -33,6 +33,9 @@ for c = 1:N
     idx = ~isnan(Xdata) & ~isnan(curr_err);
     Xdata_cut = Xdata(idx);
     curr_err = curr_err(idx);
+    if(exist('factor_site', 'var'))
+        curr_factor_site = factor_site(idx);
+    end
 
     Nsub = length(curr_err);
     Nkeep = round(Nsub * abs(threshold));
@@ -44,6 +47,9 @@ for c = 1:N
     top_err_idx = top_err_idx(1:Nkeep);
     Xdata_cut = Xdata_cut(top_err_idx);
     curr_err = curr_err(top_err_idx);
+    if(exist('factor_site', 'var'))
+        curr_factor_site = curr_factor_site(top_err_idx);
+    end
 
     subplot(row, col, c);
 
@@ -60,11 +66,17 @@ for c = 1:N
     
     Ydata_anova = [];
     grp_anova = [];
+    if(exist('factor_site', 'var'))
+        site_anova = [];
+    end
     for c2 = 1:length(Xclasses)
         cidx = find(Xdata_cut == Xclasses(c2));
         Ydata(1:length(cidx), c2) = curr_err(cidx);
         Ydata_anova = [Ydata_anova; curr_err(cidx)];
         grp_anova = [grp_anova; repmat(c2, size(curr_err(cidx)))];
+        if(exist('factor_site', 'var'))
+            site_anova = [site_anova; curr_factor_site(cidx)];
+        end
     end
     
     if(length(Xclasses) == 2)
@@ -73,6 +85,12 @@ for c = 1:N
         [p, anovatab, stats] = anova1(Ydata_anova, grp_anova, 'off');
         fprintf('ANOVA table for %s\n', titles{c})
         anovatab
+
+        if(exist('factor_site', 'var'))
+            [p2, tbl2, stats2] = anovan(Ydata_anova, {grp_anova, site_anova}, 'model', 2, 'display', 'off');
+            fprintf('Two-way ANOVA table for %s\n', titles{c})
+            tbl2
+        end
     end
 
     vio = violinplot(Ydata, [], [], 'ShowMean', true);
@@ -90,7 +108,13 @@ for c = 1:N
     if(length(Xclasses) == 2)
         text(mean(Xlims)-0.28, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
     else
-        text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+        if(~exist('p2', 'var'))
+            text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+        else
+            text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('Factor 1 p = %.2e', p2(1)), 'fontsize', 11)
+            text(Xlims(1) + 0.3, Ylims(2)-0.12*(Ylims(2)-Ylims(1)), sprintf('Factor 2 (site) p = %.2e', p2(2)), 'fontsize', 11)
+            text(Xlims(1) + 0.3, Ylims(2)-0.22*(Ylims(2)-Ylims(1)), sprintf('Interaction p = %.2e', p2(3)), 'fontsize', 11)
+        end
     end
 
     xlabel(Xlabel, 'fontsize', 12);

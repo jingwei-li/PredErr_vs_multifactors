@@ -18,7 +18,7 @@ function ABCD_PredErr_vs_sociodemograph(subj_ls, avgPredErr, outdir, bhvr_cls_na
 %     A cell array contains the subtitles for each subplot which corresponds to a behavioral cluster. 
 %     The number of entries in `bhvr_cls_names` should be the same with the number of fields in the `err_arg` 
 %     structure passed in by `avgPredErr` variable.
-%     e.g. bhvr_cls_names = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodomal Psychosis'};
+%     e.g. bhvr_cls_names = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodromal Psychosis'};
 %
 %   - metric
 %     Choose from 'handedness', 'prt_educ', 'income', 'address_size', 'ethnicity', 'age', and 'sex'.
@@ -36,6 +36,27 @@ start_dir = pwd;
 
 subj_hdr = 'subjectkey';
 event_hdr = 'eventname';
+
+if(~strcmpi(metric, 'site'))
+    site_relpath = 'abcd_lt01.txt';
+    cd(csv_dir)
+    system(sprintf('datalad get -s inm7-storage %s', site_relpath));
+    cd(start_dir)
+    site_csv = fullfile(csv_dir, site_relpath);
+    d_site = readtable(site_csv);
+
+    site_base_event = strcmp(d_site.(event_hdr), 'baseline_year_1_arm_1');
+    site = cell(nsub,1);
+    for s = 1:nsub
+        tmp_idx = strcmp(d_site.(subj_hdr), subjects{s});
+        if(any(tmp_idx==1))
+            tmp_idx = tmp_idx & site_base_event;
+            site(s) = d_site.site_id_l(tmp_idx);
+        end
+    end
+    uq_st = unique(site);
+end
+
 
 switch metric
 case 'handedness'
@@ -64,6 +85,12 @@ case 'prt_educ'
     cd(start_dir)
     educ_csv = fullfile(csv_dir, educ_relpath);
     d = readtable(educ_csv);
+
+    %dummies = zeros(length(site), length(uq_st));
+    %for s = 1:length(uq_st)
+    %    dummies(:,s) = double(strcmp(site, uq_st{s})).*s;
+    %end
+    %dummies = cellstr(num2str(sum(dummies,2)));
 
     peduc_hdr = {'demo_prnt_ed_v2', 'demo_prtnr_ed_v2'};
     peduc_colloquial = {'Parent 1''s degree', 'Parent 2''s degree'};
@@ -101,7 +128,7 @@ case 'prt_educ'
 
     % convert 777 & 999 to nan; 1-5 to the median 3 ("Grade 1-5"); 6-8 to the median 7 ("Grade 6-8"); 
     % 9-12 to the median 10.5 ("Grade 9-12"); 13-14 to the median 13.5 ("High school diploma, GED, or equvalent"); 
-    % 16-27 to the median 16.5 ("Associate degree")
+    % 16-17 to the median 16.5 ("Associate degree")
     peduc(peduc>25) = nan;
     peduc(peduc>=1 & peduc<=5) = 3;
     peduc(peduc>=6 & peduc<=8) = 7;
@@ -118,7 +145,22 @@ case 'prt_educ'
     Xlabel = peduc_colloquial{1};
     Ylabel = 'Prediction error (abs)';
     outbase = 'PredErr_vs_Prt1_Educ';
-    %ABCD_violin_PredErr_vs_other_var(peduc(:,1), err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 0.1)
+    ABCD_violin_PredErr_vs_other_var(peduc(:,1), err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+    %outbase = 'PredErr_vs_Prt1_Educ_site';
+    %ABCD_violin_PredErr_vs_other_var(peduc(:,1), err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1, dummies)
+
+    err_names = fieldnames(err_avg);
+    for s = 1:length(uq_st)
+        site_idx = strcmp(site, uq_st{s});
+        if(length(find(site_idx==1)) > 300)
+            new_err = err_avg;
+            for c = 1:length(err_names);
+                new_err.(err_names{c}) = err_avg.(err_names{c})(site_idx);
+            end
+            outbase = ['PredErr_vs_Prt1_Educ_' uq_st{s}];
+            ABCD_violin_PredErr_vs_other_var(peduc(site_idx,1), new_err, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+        end
+    end
 
     %% who is the parent 1?
     % 1 = Childs Biological Mother; 2 = Childs Biological Father; 3 = Adoptive Parent; 4 = Childs Custodial Parent; 5 = Other
@@ -182,6 +224,19 @@ case 'income'
     Ylabel = 'Prediction error (abs)';
     outbase = 'PredErr_vs_income';
     ABCD_violin_PredErr_vs_other_var(income, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+
+    err_names = fieldnames(err_avg);
+    for s = 1:length(uq_st)
+        site_idx = strcmp(site, uq_st{s});
+        if(length(find(site_idx==1)) > 300)
+            new_err = err_avg;
+            for c = 1:length(err_names);
+                new_err.(err_names{c}) = err_avg.(err_names{c})(site_idx);
+            end
+            outbase = ['PredErr_vs_income_' uq_st{s}];
+            ABCD_violin_PredErr_vs_other_var(income(site_idx), new_err, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+        end
+    end
 case 'address_size'
     size_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -227,6 +282,19 @@ case 'ethnicity'
     Ylabel = 'Prediction error(abs)';
     outbase = 'PredErr_vs_ethnicity';
     ABCD_violin_PredErr_vs_other_var(ethnicity, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+
+    err_names = fieldnames(err_avg);
+    for s = 1:length(uq_st)
+        site_idx = strcmp(site, uq_st{s});
+        if(length(find(site_idx==1)) > 300)
+            new_err = err_avg;
+            for c = 1:length(err_names);
+                new_err.(err_names{c}) = err_avg.(err_names{c})(site_idx);
+            end
+            outbase = ['PredErr_vs_ethnicity_' uq_st{s}];
+            ABCD_violin_PredErr_vs_other_var(ethnicity(site_idx), new_err, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+        end
+    end
 case 'age'
     age_relpath = 'abcd_lt01.txt';
     cd(csv_dir)
@@ -254,6 +322,15 @@ case 'age'
     Ylabel = 'Prediction error(abs)';
     outbase = 'PredErr_vs_age';
     ABCD_violin_PredErr_vs_other_var(age, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+
+    dummies = zeros(length(site), length(uq_st));
+    for s = 1:length(uq_st)
+        dummies(:,s) = double(strcmp(site, uq_st{s}));
+    end
+    [resid, ~, ~, ~] = CBIG_glm_regress_matrix(age, dummies, 1, []);
+    Xlabel = 'Age';
+    outbase = 'PredErr_vs_age_siteReg_scatter';
+    ABCD_scatter_PredErr_vs_other_var(err_avg, resid, outdir, outbase, bhvr_cls_names, Ylabel, 1)
 case 'sex'
     sex_relpath = 'abcd_lt01.txt';
     cd(csv_dir)
@@ -279,6 +356,58 @@ case 'sex'
     outbase = 'PredErr_vs_sex';
     ABCD_violin_PredErr_vs_other_var(sex, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 
+    err_names = fieldnames(err_avg);
+    for s = 1:length(uq_st)
+        site_idx = strcmp(site, uq_st{s});
+        if(length(find(site_idx==1)) > 300)
+            new_err = err_avg;
+            for c = 1:length(err_names);
+                new_err.(err_names{c}) = err_avg.(err_names{c})(site_idx);
+            end
+            outbase = ['PredErr_vs_sex_' uq_st{s}];
+            ABCD_violin_PredErr_vs_other_var(sex(site_idx), new_err, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+        end
+    end
+case 'site'
+    site_relpath = 'abcd_lt01.txt';
+    cd(csv_dir)
+    system(sprintf('datalad get -s inm7-storage %s', site_relpath));
+    cd(start_dir)
+    site_csv = fullfile(csv_dir, site_relpath);
+    d = readtable(site_csv);
+    base_event = strcmp(d.(event_hdr), 'baseline_year_1_arm_1');
+
+    site = cell(nsub,1);
+    for s = 1:nsub
+        tmp_idx = strcmp(d.(subj_hdr), subjects{s});
+        if(any(tmp_idx==1))
+            tmp_idx = tmp_idx & base_event;
+            site(s) = d.site_id_l(tmp_idx);
+        end
+    end
+
+    XTickLabels = unique(site);
+    Xdata = nan(length(site), 1);
+    for x = 1:length(XTickLabels)
+        Xdata(strcmp(site, XTickLabels{x})) = x;
+    end
+
+    Xlabel = 'Site';
+    Ylabel = 'Prediction error (abs)';
+    outbase = 'PredErr_vs_site';
+    ABCD_violin_PredErr_vs_other_var(Xdata, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
+
+    Xdata2 = nan(length(site), 1);
+    XTickLabels2 = XTickLabels
+    for x = 1:length(XTickLabels)
+        if(length(find(strcmp(site, XTickLabels{x}))) > 1)
+            Xdata2(strcmp(site, XTickLabels{x})) = x;
+        else
+            XTickLabels2 = setdiff(XTickLabels2, XTickLabels(x));
+        end
+    end
+    outbase = 'PredErr_vs_site_removeSingleDataPoint';
+    ABCD_violin_PredErr_vs_other_var(Xdata2, err_avg, outdir, outbase, XTickLabels, Xlabel, Ylabel, bhvr_cls_names, 1)
 otherwise
     error('Unknown metric: %s', metric)
 end

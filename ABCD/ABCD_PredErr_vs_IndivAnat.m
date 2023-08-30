@@ -14,7 +14,7 @@ function ABCD_PredErr_vs_IndivAnat(avgPredErr, outdir, Xlabels, anat_metric, var
 %     A cell array contains the X-axis names for each behavioral cluster. The number of
 %     entries in `Xlabels` should be the same with the number of fields in the `err_arg` structure
 %     passed in by `avgPredErr` variable.
-%     Example: Xlabels = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodomal Psychosis'};
+%     Example: Xlabels = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodromal Psychosis'};
 %
 %   - anat_metric
 %     Choose between 'Euler', 'talxfm', 'ICV' or 'bbr_cost'. 
@@ -98,6 +98,18 @@ case 'ICV'
     Ylabel = 'ICV';
     outbase = 'PredErr_vs_ICV';
     ABCD_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 1)
+
+    site = d.site(idx);
+    uq_st = unique(site);
+    dummies = zeros(length(site), length(uq_st));
+    for s = 1:length(uq_st)
+        dummies(:,s) = double(strcmp(site, uq_st{s}));
+    end
+    [resid, ~, ~, ~] = CBIG_glm_regress_matrix(ICV, dummies, 1, []);
+
+    Ylabel = 'ICV, site regressed';
+    outbase = 'PredErr_vs_ICV_siteReg';
+    ABCD_scatter_PredErr_vs_other_var(err_avg, resid, outdir, outbase, Xlabels, Ylabel, 1)
 case 'talxfm'
     [x_path, y_path, z_path] = internal.stats.parseArgs({'x','y','z'}, {[],[],[]}, varargin{:});
     scaling = dlmread(x_path);

@@ -36,6 +36,17 @@ Ylabel = 'FD';
 outbase = 'PredErr_vs_FD';
 ABCD_scatter_PredErr_vs_other_var(err_avg, FD, outdir, outbase, Xlabels, Ylabel, 1)
 
+site = d.site(idx);
+uq_st = unique(site);
+dummies = zeros(length(site), length(uq_st));
+for s = 1:length(uq_st)
+    dummies(:,s) = double(strcmp(site, uq_st{s}));
+end
+[resid, ~, ~, ~] = CBIG_glm_regress_matrix(FD, dummies, 1, []);
+Ylabel = 'FD, site regressed';
+outbase = 'PredErr_vs_FD_siteReg';
+ABCD_scatter_PredErr_vs_other_var(err_avg, resid, outdir, outbase, Xlabels, Ylabel, 1)
+
 Ylabel = 'log(FD)';
 outbase = 'PredErr_vs_logFD';
 ABCD_scatter_PredErr_vs_other_var(err_avg, log(FD), outdir, outbase, Xlabels, Ylabel, 1)
