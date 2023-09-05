@@ -34,11 +34,6 @@ case 'rsfc_homo'
         internal.stats.parseArgs({'homo_mat', 'subj_ls', 'site_csv'}, {[], ...
         '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/subjects_pass_rs_pass_pheno.txt', ...
         '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/phenotypes_pass_rs.txt'}, varargin{:});
-    if(strcmp(varargin{1}, 'homo_mat'))
-        homo_mat = varargin{2};
-    else
-        error('Unknown option %s', varargin{1});
-    end
 
     load(homo_mat)
 
