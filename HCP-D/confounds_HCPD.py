@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description='Compute nuisance confounds for one
 parser.add_argument('sub', type=str, help="Index of subject in all_subjects.csv")
 parser.add_argument('out', help='Output directory.')
 parser.add_argument('-d', help='Local path of HCP-Aging folder under inm-7 superdataset.',
-    default='/home/jli/datasets/inm7_superds/original/hcp/hcp_development')
+    default='/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development')
 args = parser.parse_args()
 
 # Set-up

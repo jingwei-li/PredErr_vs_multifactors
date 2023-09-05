@@ -14,9 +14,9 @@ parser = argparse.ArgumentParser(description='Compute nuisance confounds for one
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument('out', help='Output list (full path).')
 parser.add_argument('-d', help='Local path of HCP-Aging folder under inm-7 superdataset.',
-    default='/home/jli/datasets/inm7-superds/original/hcp/hcp_aging')
+    default='/data/project/predict_stereotype/datasets/inm7-superds/original/hcp/hcp_aging')
 parser.add_argument('-s', help='Path to the subject list.',
-    default='/home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/lists/sublist_allbehavior.csv')
+    default='/data/project/predict_stereotype/new_results/HCP-A/lists/sublist_allbehavior.csv')
 args = parser.parse_args()
 
 # Set-up

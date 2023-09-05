@@ -1,6 +1,6 @@
 #!/bin/bash
 
-proj_dir='/home/jli/my_projects/fairAI/from_sg'
+proj_dir='/data/project/predict_stereotype'
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 REPO_DIR=$(dirname $DIR)
 
@@ -22,7 +22,7 @@ executable     = $DIR/HCP-D_collect_DVARS.sh
 transfer_executable   = False
 \n"
 
-subj_ls=/home/jli/my_projects/fairAI/from_sg/new_results/HCP-D/lists/all_subjects.csv
+subj_ls=$proj_dir/new_results/HCP-D/lists/all_subjects.csv
 printf "arguments = -s $subj_ls \n"
 printf "log       = ${LOGS_DIR}/\$(Cluster).\$(Process).${start}.log\n"
 printf "output    = ${LOGS_DIR}/\$(Cluster).\$(Process).${start}.out\n"

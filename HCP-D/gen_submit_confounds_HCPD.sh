@@ -1,6 +1,6 @@
 #!/bin/bash
 
-proj_dir='/home/jli/my_projects/fairAI/from_sg'
+proj_dir='/data/project/predict_stereotype'
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 REPO_DIR=$(dirname $DIR)
 
@@ -23,7 +23,7 @@ executable     = /usr/bin/python3
 transfer_executable   = False
 \n"
 
-sublist=/home/jli/my_projects/fairAI/from_sg/new_results/HCP-D/lists/all_subjects.csv
+sublist=$proj_dir/new_results/HCP-D/lists/all_subjects.csv
 outdir=$proj_dir/new_results/HCP-D/lists/nuisance_regressors
 c=1
 while IFS= read -r line; do

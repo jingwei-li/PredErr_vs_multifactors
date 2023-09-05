@@ -8,8 +8,8 @@
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 REPO_DIR=$(dirname $DIR)
 
-data_dir=/home/jli/datasets/inm7_superds/original/hcp/hcp_development
-subj_ls=/home/jli/my_projects/fairAI/from_sg/new_results/HCP-D/lists/all_subjects.csv
+data_dir=/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development
+subj_ls=/data/project/predict_stereotype/new_results/HCP-D/lists/all_subjects.csv
 outdir=
 outbase_suffix=
 

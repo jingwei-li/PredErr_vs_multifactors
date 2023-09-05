@@ -15,7 +15,7 @@ fi
 ROOT_DIR=$(dirname "$SCRIPT_DIR")
 
 # subject list variables
-sublist=/home/jli/my_projects/fairAI/from_sg/new_results/HCP-D/lists/sublist_allbehavior.csv
+sublist=/data/project/predict_stereotype/new_results/HCP-D/lists/sublist_allbehavior.csv
 
 ###########################################
 # Main commands

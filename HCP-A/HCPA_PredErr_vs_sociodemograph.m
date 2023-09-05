@@ -7,7 +7,7 @@ function HCPA_PredErr_vs_sociodemograph(avgPredErr, sublist, outdir, bhvr_cls_na
     
 load(avgPredErr)
 subjects = table2array(readtable(sublist, 'ReadVariableNames', false));
-csv_dir = '/home/jli/datasets/inm7-superds/original/hcp/hcp_aging/phenotype';
+csv_dir = '/data/project/predict_stereotype/datasets/inm7-superds/original/hcp/hcp_aging/phenotype';
 subj_hdr = 'src_subject_id';
 
 switch metric

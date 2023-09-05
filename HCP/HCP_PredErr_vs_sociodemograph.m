@@ -13,7 +13,7 @@ nsub = length(subjects);
 
 load(avgPredErr)
 
-csv_dir = '/home/jli/datasets/HCP_YA_csv';
+csv_dir = '/data/project/predict_stereotype/datasets/HCP_YA_csv';
 subj_hdr = 'Subject';
 
 switch metric

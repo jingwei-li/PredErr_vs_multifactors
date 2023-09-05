@@ -11,7 +11,7 @@ addpath(fullfile(fileparts(script_dir), 'HCP-A'))
 
 load(avgPredErr)
 subjects = table2array(readtable(sublist, 'ReadVariableNames', false));
-csv_dir = '/home/jli/datasets/inm7_superds/original/hcp/hcp_development/phenotype';
+csv_dir = '/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development/phenotype';
 subj_hdr = 'src_subject_id';
 
 switch metric

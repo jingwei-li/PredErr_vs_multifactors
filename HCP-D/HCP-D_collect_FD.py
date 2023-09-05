@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser(description='Compute nuisance confounds for one
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument('out', help='Output list (full path).')
 parser.add_argument('-d', help='Local path of HCP-Development folder under inm-7 superdataset.',
-    default='/home/jli/datasets/inm7_superds/original/hcp/hcp_development')
+    default='/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development')
 parser.add_argument('-s', help='Subject list.', default='')
 args = parser.parse_args()
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-proj_dir='/home/jli/my_projects/fairAI/from_sg'
+proj_dir='/data/project/predict_stereotype'
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 REPO_DIR=$(dirname $DIR)
 

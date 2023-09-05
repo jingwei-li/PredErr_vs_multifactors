@@ -31,7 +31,7 @@ if(~strcmpi(metric, 'ICV'))
 end
 
 load(avgPredErr)
-csv_dir = '/data/project/AfrAm_FuncParc/data/datasets/inm7_superds/original/abcd/phenotype/phenotype';
+csv_dir = '/data/project/predict_stereotype/datasets/inm7_superds/original/abcd/phenotype/phenotype';
 start_dir = pwd;
 
 subj_hdr = 'subjectkey';

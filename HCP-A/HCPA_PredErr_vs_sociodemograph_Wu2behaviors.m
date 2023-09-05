@@ -24,7 +24,7 @@ for t = 1:length(targets)
     end
 end
 
-csv_dir = '/home/jli/datasets/inm7-superds/original/hcp/hcp_aging/phenotype';
+csv_dir = '/data/project/predict_stereotype/datasets/inm7-superds/original/hcp/hcp_aging/phenotype';
 subj_hdr = 'src_subject_id';
 
 switch metric

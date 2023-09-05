@@ -53,8 +53,8 @@ case 'Euler'
     HCP_scatter_PredErr_vs_other_var(err_avg, log(-euler), outdir, outbase, Xlabels, Ylabel, 1)
 case 'ICV'
     [subj_ls, csv] = internal.stats.parseArgs({'subj_ls', 'csv'}, ...
-        {'/home/jli/my_projects/fairAI/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt', ...
-        '/home/jli/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv'}, varargin{:});
+        {'/data/project/predict_stereotype/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt', ...
+        '/data/project/predict_stereotype/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv'}, varargin{:});
     d = readtable(csv);
     subjects = dlmread(subj_ls);
     [~, ~, idx] = intersect(subjects, d.Subject, 'stable');

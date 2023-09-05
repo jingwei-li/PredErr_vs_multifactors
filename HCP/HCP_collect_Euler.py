@@ -4,9 +4,9 @@ import numpy as np
 
 # input arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--subj_ls', help='HCP subject list.', default='/home/jli/my_projects/fairAI/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt')
-parser.add_argument('--csv', help='FreeSurfer CSV.', default='/home/jli/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv')
-parser.add_argument('--outdir', help='Output directory.', default='/home/jli/my_projects/fairAI/from_sg/new_results/HCP/lists')
+parser.add_argument('--subj_ls', help='HCP subject list.', default='/data/project/predict_stereotype/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt')
+parser.add_argument('--csv', help='FreeSurfer CSV.', default='/data/project/predict_stereotype/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv')
+parser.add_argument('--outdir', help='Output directory.', default='/data/project/predict_stereotype/new_results/HCP/lists')
 args = parser.parse_args()
 
 # make output directory

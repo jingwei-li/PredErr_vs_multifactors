@@ -25,7 +25,7 @@ date
 matlab_cmd="/opt/MATLAB/R2023a/bin/matlab -nodesktop -nosplash -nodisplay -nojvm -singleCompThread -r"
 
 # subject list variables
-sublist=/home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/lists/sublist_allbehavior.csv
+sublist=/data/project/predict_stereotype/new_results/HCP-A/lists/sublist_allbehavior.csv
 echo $target
 
 # wbCBPP 

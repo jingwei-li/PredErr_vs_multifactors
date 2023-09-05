@@ -5,13 +5,13 @@ request_cpus          = 1
 request_memory        = 5G
 
 # Execution
-initialdir            = /home/jli/my_projects/fairAI/from_sg/new_scripts/PredErr_vs_multifactors/HCP-A
+initialdir            = /data/project/predict_stereotype/new_scripts/PredErr_vs_multifactors/HCP-A
 executable            = call_cbpp_HCP-A.sh
 transfer_executable   = False
 
-arguments   = -i /home/jli/projects/jianxiao/generalizability_CBPP/proc_data -o /home/jli/my_projects/fairAI/from_sg/new_results/HCP-A
-log         = /home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/logs/call_cbpp_HCP-A_$(Cluster).$(Process).log
-output      = /home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/logs/call_cbpp_HCP-A_$(Cluster).$(Process).out
-error       = /home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/logs/call_cbpp_HCP-A_$(Cluster).$(Process).err
+arguments   = -i /home/jli/projects/jianxiao/generalizability_CBPP/proc_data -o /data/project/predict_stereotype/new_results/HCP-A
+log         = /data/project/predict_stereotype/new_results/HCP-A/logs/call_cbpp_HCP-A_$(Cluster).$(Process).log
+output      = /data/project/predict_stereotype/new_results/HCP-A/logs/call_cbpp_HCP-A_$(Cluster).$(Process).out
+error       = /data/project/predict_stereotype/new_results/HCP-A/logs/call_cbpp_HCP-A_$(Cluster).$(Process).err
 requirements = Machine == "cpu10.htc.inm7.de"
 Queue

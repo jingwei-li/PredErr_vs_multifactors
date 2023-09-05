@@ -1,6 +1,6 @@
 #!/bin/bash
 
-proj_dir='/home/jli/my_projects/fairAI/from_sg'
+proj_dir='/data/project/predict_stereotype'
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 CPUS='1'
@@ -25,7 +25,7 @@ HCP_dir=/home/jli/datasets/human-connectome-project-openaccess
 outdir=$proj_dir/new_results/HCP/PredErr_vs_IndivFunc
 mkdir -p $outdir
 
-subj_ls=$proj_dir/HCP_race/scripts/lists/subjects_wIncome_948.txt
+subj_ls=$proj_dir/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt
 outname=$outdir/homo_subjects_wIncome_948.mat
 printf "arguments = -singleCompThread -r HCP_rsfc_homo_schaefer(400,'$subj_ls','$HCP_dir','$outname')\n"
 printf "log       = ${LOGS_DIR}/\$(Cluster).\$(Process).${start}.log\n"

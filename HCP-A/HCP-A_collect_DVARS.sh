@@ -3,9 +3,9 @@
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 REPO_DIR=$(dirname $DIR)
 container="/home/jli/containers/images/neurodesk/neurodesk-fsl--6.0.5.1.simg"
-subj_ls=/home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/lists/sublist_allbehavior.csv
-data_dir="/home/jli/datasets/inm7-superds/original/hcp/hcp_aging"
-outdir="/home/jli/my_projects/fairAI/from_sg/new_results/HCP-A/lists/dvars"
+subj_ls=/data/project/predict_stereotype/new_results/HCP-A/lists/sublist_allbehavior.csv
+data_dir="/data/project/predict_stereotype/datasets/inm7-superds/original/hcp/hcp_aging"
+outdir="/data/project/predict_stereotype/new_results/HCP-A/lists/dvars"
 
 main() {
     subjects=$(cat $subj_ls)

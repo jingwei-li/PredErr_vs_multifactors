@@ -1,6 +1,6 @@
 #!/bin/bash
 
-proj_dir='/home/jli/my_projects/fairAI/from_sg'
+proj_dir='/data/project/predict_stereotype'
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 REPO_DIR=$(dirname $DIR)
 
@@ -22,7 +22,7 @@ executable     = /opt/MATLAB/R2023a/bin/matlab
 transfer_executable   = False
 \n"
 
-HCPD_dir=/home/jli/datasets/inm7_superds/original/hcp/hcp_development
+HCPD_dir=/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development
 conf_dir=$proj_dir/new_results/HCP-D/lists/nuisance_regressors
 outdir=$proj_dir/new_results/HCP-D/PredErr_vs_IndivFunc/404sub_16behaviors
 mkdir -p $outdir
