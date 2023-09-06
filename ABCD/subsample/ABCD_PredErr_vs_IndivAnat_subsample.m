@@ -61,7 +61,7 @@ case 'Euler'
     rh_euler = dlmread(rh_path);
     euler = (lh_euler + rh_euler) ./ 2;
 
-    asso = ABCD_subsample_PredErr_vs_other_var(err_avg, euler, size, repeats);
+    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, euler, size, repeats);
     save(outmat, 'asso')
 
     ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
@@ -75,7 +75,7 @@ case 'ICV'
     [~, ~, idx] = intersect(subjects, d.subjectkey, 'stable');
     ICV = d.ICV(idx);
 
-    asso = ABCD_subsample_PredErr_vs_other_var(err_avg, ICV, size, repeats);
+    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, ICV, size, repeats);
     save(outmat, 'asso')
 
     ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)

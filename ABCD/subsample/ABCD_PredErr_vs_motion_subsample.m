@@ -44,13 +44,13 @@ subjects = CBIG_text2cell(subj_ls);
 FD = d.FD(idx);
 DV = d.DVARS(idx);
 
-asso = ABCD_subsample_PredErr_vs_other_var(err_avg, FD, size, repeats);
+asso = ABCD_subsample_PredErr_vs_conitnuous_covar(err_avg, FD, size, repeats);
 save([outmat 'FD.mat'], 'asso')
 
 ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'FD'])
 ABCD_hist_subsample_pval(asso, bhvr_cls_names, [figout 'FD'])
 
-asso = ABCD_subsample_PredErr_vs_other_var(err_avg, DV, size, repeats);
+asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, DV, size, repeats);
 save([outmat 'DV.mat'], 'asso')
 
 ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'DV'])

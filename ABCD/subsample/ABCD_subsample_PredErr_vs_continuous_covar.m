@@ -1,6 +1,6 @@
-function asso = ABCD_subsample_PredErr_vs_other_var(err_avg, covar, size, repeats)
+function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, size, repeats)
 
-% ass = ABCD_subsample_PredErr_vs_other_var(err_avg, size, repeats)
+% ass = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, size, repeats)
 %
 % Basic function of subsampling.
 %

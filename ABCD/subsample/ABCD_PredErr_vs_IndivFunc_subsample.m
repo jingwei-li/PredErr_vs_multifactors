@@ -47,7 +47,7 @@ case 'rsfc_homo'
         '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/phenotypes_pass_rs.txt'}, varargin{:});
     load(homo_mat)
 
-    asso = ABCD_subsample_PredErr_vs_other_var(err_avg, homo_out, size, repeats);
+    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, homo_out, size, repeats);
     save(outmat, 'asso')
 
     ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
