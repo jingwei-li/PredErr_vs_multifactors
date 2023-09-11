@@ -1,6 +1,6 @@
-function ABCD_PredErr_vs_IndivFunc_subsample(avgPredErr, bhvr_cls_names, outmat, figout, size, repeats, func_metric, varargin)
+function ABCD_PredErr_vs_IndivFunc_subsample(avgPredErr, bhvr_cls_names, outmat, figout, s_size, repeats, func_metric, varargin)
 
-% ABCD_PredErr_vs_IndivFunc_subsample(avgPredErr, bhvr_cls_names, outmat, figout, size, repeats, func_metric, varargin)
+% ABCD_PredErr_vs_IndivFunc_subsample(avgPredErr, bhvr_cls_names, outmat, figout, s_size, repeats, func_metric, varargin)
 %
 % Compulsory inputs:
 %   - avgPredErr
@@ -15,7 +15,7 @@ function ABCD_PredErr_vs_IndivFunc_subsample(avgPredErr, bhvr_cls_names, outmat,
 %     association between prediction error of one behavioral class with the given covariate.
 %   - figout
 %     Output name (without extension, full-path).
-%   - size
+%   - s_size
 %     Size of each subsample.
 %   - repeats
 %     Number of repetitions of subsampling.
@@ -47,7 +47,7 @@ case 'rsfc_homo'
         '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/phenotypes_pass_rs.txt'}, varargin{:});
     load(homo_mat)
 
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, homo_out, size, repeats);
+    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, homo_out, s_size, repeats);
     save(outmat, 'asso')
 
     ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)

@@ -1,6 +1,6 @@
-function ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_cls_names, outmat, figout, size, repeats)
+function ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_cls_names, outmat, figout, s_size, repeats)
 
-% ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_cls_names, outmat, figout, size, repeats)
+% ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_cls_names, outmat, figout, s_size, repeats)
 %
 %   - subj_ls
 %     Full path to the subject list. The subjects should be corresponded to the prediction
@@ -21,7 +21,7 @@ function ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_c
 %     association between prediction error of one behavioral class with the given covariate.
 %   - figout
 %     Output name (without extension, full-path).
-%   - size
+%   - s_size
 %     Size of each subsample.
 %   - repeats
 %     Number of repetitions of subsampling.
@@ -44,13 +44,13 @@ subjects = CBIG_text2cell(subj_ls);
 FD = d.FD(idx);
 DV = d.DVARS(idx);
 
-asso = ABCD_subsample_PredErr_vs_conitnuous_covar(err_avg, FD, size, repeats);
+asso = ABCD_subsample_PredErr_vs_conitnuous_covar(err_avg, FD, s_size, repeats);
 save([outmat 'FD.mat'], 'asso')
 
 ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'FD'])
 ABCD_hist_subsample_pval(asso, bhvr_cls_names, [figout 'FD'])
 
-asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, DV, size, repeats);
+asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, DV, s_size, repeats);
 save([outmat 'DV.mat'], 'asso')
 
 ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'DV'])

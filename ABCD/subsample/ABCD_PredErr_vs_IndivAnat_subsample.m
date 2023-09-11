@@ -1,6 +1,6 @@
-function ABCD_PredErr_vs_IndivAnat_subsample(avgPredErr, bhvr_cls_names, outmat, figout, size, repeats, anat_metric, varargin)
+function ABCD_PredErr_vs_IndivAnat_subsample(avgPredErr, bhvr_cls_names, outmat, figout, s_size, repeats, anat_metric, varargin)
 
-% ABCD_PredErr_vs_IndivAnat_bstrp(avgPredErr, bhvr_cls_names, outmat, figout, size, repeats, anat_metric, varargin)
+% ABCD_PredErr_vs_IndivAnat_bstrp(avgPredErr, bhvr_cls_names, outmat, figout, s_size, repeats, anat_metric, varargin)
 %
 % Compulsory inputs:
 %   - avgPredErr
@@ -15,7 +15,7 @@ function ABCD_PredErr_vs_IndivAnat_subsample(avgPredErr, bhvr_cls_names, outmat,
 %     association between prediction error of one behavioral class with the given covariate.
 %   - figout
 %     Output name (without extension, full-path).
-%   - size
+%   - s_size
 %     Size of each subsample.
 %   - repeats
 %     Number of repetitions of subsampling.
@@ -61,7 +61,7 @@ case 'Euler'
     rh_euler = dlmread(rh_path);
     euler = (lh_euler + rh_euler) ./ 2;
 
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, euler, size, repeats);
+    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, euler, s_size, repeats);
     save(outmat, 'asso')
 
     ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
@@ -75,7 +75,7 @@ case 'ICV'
     [~, ~, idx] = intersect(subjects, d.subjectkey, 'stable');
     ICV = d.ICV(idx);
 
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, ICV, size, repeats);
+    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, ICV, s_size, repeats);
     save(outmat, 'asso')
 
     ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)

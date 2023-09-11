@@ -1,6 +1,6 @@
-function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, size, repeats)
+function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, s_size, repeats)
 
-% ass = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, size, repeats)
+% ass = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, s_size, repeats)
 %
 % Basic function of subsampling.
 %
@@ -9,7 +9,7 @@ function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, size,
 %     similar patterns in the errors. It is computed by the function `ABCD_avgPredErr`.
 %   - covar
 %     
-%   - size
+%   - s_size
 %     Size of each subsample.
 %   - repeats
 %     Number of repetitions of subsampling.
@@ -34,7 +34,7 @@ for c = 1:N
     rho = zeros(repeats, 1);    pval = zeros(repeats, 1);
     s_rho = zeros(repeats, 1);    s_pval = zeros(repeats, 1);
     for n = 1:repeats
-        sample = datasample(1:Nsub, size, 'replace', true);
+        sample = datasample(1:Nsub, s_size, 'replace', true);
         X = Xdata(sample);
         Y = Ydata(sample);
         [rho(n), pval(n)] = corr(X, Y);
@@ -48,15 +48,26 @@ for c = 1:N
     asso.(['class' num2str(c)]).rho_mean = mean(rho);
     asso.(['class' num2str(c)]).rho_var = mean((rho - mean(rho)).^2);
     % confidence interval reference: https://normaldeviate.wordpress.com/2013/01/27/bootstrapping-and-subsampling-part-ii/
-    L = (rho - mean(rho)) .* sqrt(size);
+    L = (rho - mean(rho)) .* sqrt(s_size);
     t1 = prctile(L, 1 - alpha/2);   t2 = prctile(L, alpha/2);
     asso.(['class' num2str(c)]).rho_CI = [mean(rho) - t1/sqrt(Nsub), mean(rho) + t2/sqrt(Nsub)];
 
     asso.(['class' num2str(c)]).s_rho_mean = mean(s_rho);
     asso.(['class' num2str(c)]).s_rho_var = mean((s_rho - mean(s_rho)).^2);
-    L = (s_rho - mean(s_rho)) .* sqrt(size);
+    L = (s_rho - mean(s_rho)) .* sqrt(s_size);
     t1 = prctile(L, 1 - alpha/2);   t2 = prctile(L, alpha/2);
     asso.(['class' num2str(c)]).s_rho_CI = [mean(s_rho) - t1/sqrt(Nsub), mean(s_rho) + t2/sqrt(Nsub)];
+
+    % confidence interval 
+    %zCritical = norminv(1 - alpha / 2, 0, 1); % Z-score for two-tailed test
+    %marginOfError = zCritical * (std(rho) / sqrt(repeats));
+    %lowerBound = mean(rho) - marginOfError;
+    %upperBound = mean(rho) + marginOfError;
+    %asso.(['class' num2str(c)]).rho_CI = [lowerBound upperBound];
+    %marginOfError = zCritical * (std(s_rho) / sqrt(repeats));
+    %lowerBound = mean(s_rho) - marginOfError;
+    %upperBound = mean(s_rho) + marginOfError;
+    %asso.(['class' num2str(c)]).s_rho_CI = [lowerBound upperBound];
 end
 
     
