@@ -5,11 +5,12 @@ function ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
 % Plot the distribution of subsampled p values indicating the association between prediction errors and covariates.
 %
 %   - asso
-%     Struct. It is the output of `ABCD_subsample_PredErr_vs_other_var.m`. The first-level
-%     field names should be `class1`, `class2`, etc. The second-level field names should 
+%     Struct. It is the output of `ABCD_subsample_PredErr_vs_continuous_var.m` or 
+%     `ABCD_subsample_PredErr_vs_categorical_var.m`. The first-level field names should be 
+%     `class1`, `class2`, etc. The second-level field names should 
 %     contain `pval`, `s_pval`.
 %   - bhvr_cls_names
-%     A cell array contains the X-axis names for each behavioral cluster. The number of entries 
+%     A cell array contains the names for each behavioral cluster. The number of entries 
 %     in `bhvr_cls_names` should be the same with the number of fields in the `asso` structure.
 %     Example: bhvr_cls_names = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodromal Psychosis'};
 %   - figout

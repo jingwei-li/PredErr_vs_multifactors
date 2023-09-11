@@ -5,11 +5,11 @@ function ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
 % Plot the distribution of subsampled association between prediction errors and covariates.
 %
 %   - asso
-%     Struct. It is the output of `ABCD_subsample_PredErr_vs_other_var.m`. The first-level
+%     Struct. It is the output of `ABCD_subsample_PredErr_vs_continuous_var.m`. The first-level
 %     field names should be `class1`, `class2`, etc. The second-level field names should 
 %     contain `rho`, `rho_mean`, `rho_CI`, `s_rho`, `s_rho_mean`, `s_rho_CI`.
 %   - bhvr_cls_names
-%     A cell array contains the X-axis names for each behavioral cluster. The number of entries 
+%     A cell array contains the names for each behavioral cluster. The number of entries 
 %     in `bhvr_cls_names` should be the same with the number of fields in the `asso` structure.
 %     Example: bhvr_cls_names = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodromal Psychosis'};
 %   - figout
