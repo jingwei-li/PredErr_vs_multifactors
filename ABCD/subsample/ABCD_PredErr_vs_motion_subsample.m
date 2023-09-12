@@ -46,7 +46,7 @@ subjects = CBIG_text2cell(subj_ls);
 FD = d.FD(idx);
 DV = d.DVARS(idx);
 
-asso = subsample_PredErr_vs_conitnuous_covar(err_avg, FD, s_size, repeats);
+asso = subsample_PredErr_vs_continuous_covar(err_avg, FD, s_size, repeats);
 save([outmat 'FD.mat'], 'asso')
 
 hist_subsample_rho(asso, bhvr_cls_names, [figout 'FD'])
