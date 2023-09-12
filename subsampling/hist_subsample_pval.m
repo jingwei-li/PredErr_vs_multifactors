@@ -16,7 +16,7 @@ function ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
 %   - figout
 %     Output name (without extension, full-path).
 
-addpath(genpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'external_packages', 'fig_util')))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 %% when covariate is continuous
 if(isfield(asso.class1, 'pval'))
@@ -32,7 +32,7 @@ if(isfield(asso.class1, 'p'))
     self(asso, bhvr_cls_names, 'p values', [figout '_p'], 'p')
 end
 
-rmpath(genpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'external_packages', 'fig_util')))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
     
 end
 

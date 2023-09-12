@@ -17,9 +17,9 @@ function ABCD_shade_subsample_effect(asso, bhvr_cls_names, figout)
 %     Output name (without extension, full-path).
 %
     
-addpath(genpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'external_packages', 'fig_util')))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 self(asso, bhvr_cls_names, figout)
-rmpath(genpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'external_packages', 'fig_util')))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 end
 
