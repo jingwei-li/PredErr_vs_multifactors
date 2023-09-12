@@ -8,7 +8,8 @@ function ABCD_PredErr_vs_IndivAnat_subsample(avgPredErr, bhvr_cls_names, outmat,
 %     patterns in the errors. It is computed by the function `ABCD_avgPredErr`.
 %   - bhvr_cls_names
 %     A cell array contains the X-axis names for each behavioral cluster. The number of entries 
-%     in `bhvr_cls_names` should be the same with the number of fields in the `asso` structure.
+%     in `bhvr_cls_names` should be the same with the number of fields in the `err_avg` structure 
+%     in `avgPredErr`.
 %     Example: bhvr_cls_names = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodromal Psychosis'};
 %   - outmat
 %     Output mat file. It will contain a struct variable. Each field will be the bootstrapped 
@@ -41,6 +42,8 @@ function ABCD_PredErr_vs_IndivAnat_subsample(avgPredErr, bhvr_cls_names, outmat,
 %                  'csv', '/home/xxx/phenotypes_pass_rs.txt')
 %    
 
+addpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
+
 load(avgPredErr)
 outdir = fileparts(outmat);
 if(~exist(outdir, 'dir'))
@@ -61,11 +64,11 @@ case 'Euler'
     rh_euler = dlmread(rh_path);
     euler = (lh_euler + rh_euler) ./ 2;
 
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, euler, s_size, repeats);
+    asso = subsample_PredErr_vs_continuous_covar(err_avg, euler, s_size, repeats);
     save(outmat, 'asso')
 
-    ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    hist_subsample_rho(asso, bhvr_cls_names, figout)
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'ICV'
     [subj_ls, my_csv] = internal.stats.parseArgs({'subj_ls', 'csv'}, ...
         {'/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/subjects_pass_rs_pass_pheno.txt', ...
@@ -75,13 +78,15 @@ case 'ICV'
     [~, ~, idx] = intersect(subjects, d.subjectkey, 'stable');
     ICV = d.ICV(idx);
 
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, ICV, s_size, repeats);
+    asso = subsample_PredErr_vs_continuous_covar(err_avg, ICV, s_size, repeats);
     save(outmat, 'asso')
 
-    ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    hist_subsample_rho(asso, bhvr_cls_names, figout)
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 otherwise
     error('Unknown metric: %s', anat_metric)
 end
+
+rmpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
     
 end

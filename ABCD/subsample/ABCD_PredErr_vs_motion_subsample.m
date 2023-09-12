@@ -27,6 +27,8 @@ function ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_c
 %     Number of repetitions of subsampling.
 %
 
+addpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
+
 outdir = fileparts(outmat);
 if(~exist(outdir, 'dir'))
     mkdir(outdir)
@@ -56,4 +58,6 @@ save([outmat 'DV.mat'], 'asso')
 ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'DV'])
 ABCD_hist_subsample_pval(asso, bhvr_cls_names, [figout 'DV'])
     
+rmpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
+
 end

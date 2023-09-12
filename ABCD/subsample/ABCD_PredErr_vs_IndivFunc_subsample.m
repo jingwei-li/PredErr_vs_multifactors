@@ -29,6 +29,8 @@ function ABCD_PredErr_vs_IndivFunc_subsample(avgPredErr, bhvr_cls_names, outmat,
 %    For example, (..., 'homo_mat', '/home/xxx/homo_pass_rs_pass_pheno_5351.mat')
 %
 
+addpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
+
 load(avgPredErr)
 outdir = fileparts(outmat);
 if(~exist(outdir, 'dir'))
@@ -55,5 +57,7 @@ case 'rsfc_homo'
 otherwise
     error('Unknown metric: %s', func_metric)
 end
+
+rmpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
     
 end

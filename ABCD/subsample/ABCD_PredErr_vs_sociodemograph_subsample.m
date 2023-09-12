@@ -22,6 +22,8 @@ function ABCD_PredErr_vs_sociodemograph_subsample(subj_ls, avgPredErr, bhvr_cls_
 %     Choose from 'handedness', 'prt_educ', 'income', 'address_size', 'ethnicity', 'age', 'sex', and 'site'.
 %
 
+addpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
+
 [subjects, nsub] = CBIG_text2cell(subj_ls);
 if(~strcmpi(metric, 'ICV'))
     for i = 1:nsub
@@ -318,5 +320,7 @@ case 'site'
 otherwise
     error('Unknown metric: %s', metric)
 end
+
+rmpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
     
 end
