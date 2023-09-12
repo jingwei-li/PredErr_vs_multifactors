@@ -5,7 +5,7 @@ function HCP_PredErr_vs_IndivAnat(avgPredErr, outdir, Xlabels, anat_metric, vara
 % Compulsory inputs:
 %   - avgPredErr
 %     Average prediction error from the groups of behavioral measures which share similar
-%     patterns in the errors. It is computed by the function `ABCD_avgPredErr`.
+%     patterns in the errors. It is computed by the function `HCP_avgPredErr`.
 %
 %   - outdir
 %     Full path to output directory.
