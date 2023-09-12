@@ -46,17 +46,17 @@ subjects = CBIG_text2cell(subj_ls);
 FD = d.FD(idx);
 DV = d.DVARS(idx);
 
-asso = ABCD_subsample_PredErr_vs_conitnuous_covar(err_avg, FD, s_size, repeats);
+asso = subsample_PredErr_vs_conitnuous_covar(err_avg, FD, s_size, repeats);
 save([outmat 'FD.mat'], 'asso')
 
-ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'FD'])
-ABCD_hist_subsample_pval(asso, bhvr_cls_names, [figout 'FD'])
+hist_subsample_rho(asso, bhvr_cls_names, [figout 'FD'])
+hist_subsample_pval(asso, bhvr_cls_names, [figout 'FD'])
 
-asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, DV, s_size, repeats);
+asso = subsample_PredErr_vs_continuous_covar(err_avg, DV, s_size, repeats);
 save([outmat 'DV.mat'], 'asso')
 
-ABCD_hist_subsample_rho(asso, bhvr_cls_names, [figout 'DV'])
-ABCD_hist_subsample_pval(asso, bhvr_cls_names, [figout 'DV'])
+hist_subsample_rho(asso, bhvr_cls_names, [figout 'DV'])
+hist_subsample_pval(asso, bhvr_cls_names, [figout 'DV'])
     
 rmpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
 

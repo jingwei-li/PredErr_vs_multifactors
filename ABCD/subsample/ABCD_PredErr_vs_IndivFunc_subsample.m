@@ -49,11 +49,11 @@ case 'rsfc_homo'
         '/home/jli/my_projects/fairAI/from_sg/ABCD_race/scripts/lists/phenotypes_pass_rs.txt'}, varargin{:});
     load(homo_mat)
 
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, homo_out, s_size, repeats);
+    asso = subsample_PredErr_vs_continuous_covar(err_avg, homo_out, s_size, repeats);
     save(outmat, 'asso')
 
-    ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    hist_subsample_rho(asso, bhvr_cls_names, figout)
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 otherwise
     error('Unknown metric: %s', func_metric)
 end

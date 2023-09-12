@@ -54,12 +54,12 @@ case 'handedness'
     handedness(handedness==3) = nan;
 
     outmat = fullfile(outdir, 'PredErr_vs_handedness.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, handedness, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, handedness, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_handedness');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'prt_educ'
     educ_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -114,12 +114,12 @@ case 'prt_educ'
 
     %% plot parent 1's education
     outmat = fullfile(outdir, 'PredErr_vs_Prt1_Educ.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, peduc(:,1), s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, peduc(:,1), s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_Prt1_Educ');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 
     %% who is the parent 1?
     % 1 = Childs Biological Mother; 2 = Childs Biological Father; 3 = Adoptive Parent; 4 = Childs Custodial Parent; 5 = Other
@@ -137,21 +137,21 @@ case 'prt_educ'
     peduc_bm(prim ~= 1) = nan;
 
     outmat = fullfile(outdir, 'PredErr_vs_Prt1_Educ_BioMother.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, peduc_bm, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, peduc_bm, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_Prt1_Educ_BioMother');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 
     %% plot parent 2's education
     outmat = fullfile(outdir, 'PredErr_vs_Prt2_Educ.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, peduc(:,2), s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, peduc(:,2), s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_Prt2_Educ');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'income'
     income_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -179,12 +179,12 @@ case 'income'
     income(income==777) = 0;
 
     outmat = fullfile(outdir, 'PredErr_vs_income.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, income, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, income, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_income');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'address_size'
     size_relpath = 'pdem02.txt';
     cd(csv_dir)
@@ -204,12 +204,12 @@ case 'address_size'
     end
 
     outmat = fullfile(outdir, 'PredErr_vs_AddrSize.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, add_size, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, add_size, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_AddrSize');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'ethnicity'
     ethn_relpath = 'acspsw03.txt';
     cd(csv_dir)
@@ -229,12 +229,12 @@ case 'ethnicity'
     end
 
     outmat = fullfile(outdir, 'PredErr_vs_ethnicity.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, ethnicity, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, ethnicity, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_ethnicity');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'age'
     age_relpath = 'abcd_lt01.txt';
     cd(csv_dir)
@@ -254,12 +254,12 @@ case 'age'
     end
 
     outmat = fullfile(outdir, 'PredErr_vs_age.mat');
-    asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, age, s_size, repeats);
+    asso = subsample_PredErr_vs_continuous_covar(err_avg, age, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_age');
-    ABCD_hist_subsample_rho(asso, bhvr_cls_names, figout)
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    hist_subsample_rho(asso, bhvr_cls_names, figout)
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'sex'
     sex_relpath = 'abcd_lt01.txt';
     cd(csv_dir)
@@ -280,12 +280,12 @@ case 'sex'
     sex = strcmp(sex, 'F');
 
     outmat = fullfile(outdir, 'PredErr_vs_sex.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, sex, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, sex, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_sex');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 case 'site'
     site_relpath = 'abcd_lt01.txt';
     cd(csv_dir)
@@ -311,12 +311,12 @@ case 'site'
     end
 
     outmat = fullfile(outdir, 'PredErr_vs_site.mat');
-    asso = ABCD_subsample_PredErr_vs_categorical_covar(err_avg, Xdata, s_size, repeats);
+    asso = subsample_PredErr_vs_categorical_covar(err_avg, Xdata, s_size, repeats);
     save(outmat, 'asso')
 
     figout = fullfile(outdir, 'PredErr_vs_site');
-    ABCD_shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
-    ABCD_hist_subsample_pval(asso, bhvr_cls_names, figout)
+    shade_subsample_effect(asso, bhvr_cls_names, [figout '_Effect'])
+    hist_subsample_pval(asso, bhvr_cls_names, figout)
 otherwise
     error('Unknown metric: %s', metric)
 end
