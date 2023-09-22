@@ -29,7 +29,7 @@ function HCPD_covariates_association(outdir, Euler_lh, Euler_rh, ICV_txt, FD_txt
 %     '/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development/phenotype'
 %
 
-addpath(fileparts(fileparts(mfilename('fullpath'))))
+addpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'covariates_corr'))
 
 if(~exist('HCPD_csv_dir', 'var') || isempty(HCPD_csv_dir))
     HCPD_csv_dir = '/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development/phenotype';
@@ -216,6 +216,6 @@ cont_cate.acc(4,4) = LogisticReg(outdir, age(~idx), cellstr(num2str(income(~idx)
 save(fullfile(outdir, 'corr.mat'), 'continuous', 'categoric', 'cont_cate')
 
 
-rmpath(fileparts(fileparts(mfilename('fullpath'))))
+rmpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'covariates_corr'))
     
 end

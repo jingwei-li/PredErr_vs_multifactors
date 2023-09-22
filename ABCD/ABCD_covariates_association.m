@@ -25,7 +25,7 @@ function ABCD_covariates_association(outdir, Euler_lh, Euler_rh, subj_ls, my_phe
 %     The local location of ABCD phenotypes folder. Default:
 %     '/data/project/predict_stereotype/datasets/inm7_superds/original/abcd/phenotype/phenotype'
 
-addpath(fileparts(fileparts(mfilename('fullpath'))))
+addpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'covariates_corr'))
 
 if(~exist('ABCD_csv_dir', 'var') || isempty(ABCD_csv_dir))
     ABCD_csv_dir = '/data/project/predict_stereotype/datasets/inm7_superds/original/abcd/phenotype/phenotype';
@@ -269,7 +269,7 @@ cont_cate.acc(4,4) = LogisticReg(outdir, age, income, site);
 
 save(fullfile(outdir, 'corr.mat'), 'continuous', 'categoric', 'cont_cate')
 
-rmpath(fileparts(fileparts(mfilename('fullpath'))))
+rmpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'covariates_corr'))
     
 end
 

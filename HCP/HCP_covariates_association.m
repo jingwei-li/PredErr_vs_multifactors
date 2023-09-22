@@ -31,7 +31,7 @@ function HCP_covariates_association(outdir, Euler_lh, Euler_rh, subj_ls, FD_txt,
 %     The unrestricted behavioral csv file form HCP website
 %     e.g. '/data/project/predict_stereotype/datasets/HCP_YA_csv/Behavioral_jingweili_6_26_2023_1200subjects.csv'
 
-addpath(fileparts(fileparts(mfilename('fullpath'))))
+addpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'covariates_corr'))
 
 if(~exist('FS_csv', 'var') || isempty(FS_csv))
     FS_csv = '/data/project/predict_stereotype/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv';
@@ -152,6 +152,6 @@ cont_cate.acc(4,4) = LogisticReg(outdir, age, cellstr(num2str(income)), fam_id);
 save(fullfile(outdir, 'corr.mat'), 'continuous', 'categoric', 'cont_cate')
 
 
-rmpath(fileparts(fileparts(mfilename('fullpath'))))
+rmpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'covariates_corr'))
     
 end
