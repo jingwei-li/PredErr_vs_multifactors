@@ -1,6 +1,7 @@
 import argparse
 import numpy as np
 import pandas as pd
+import warnings
 from sklearn.model_selection import KFold, GroupKFold, GridSearchCV
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
@@ -27,6 +28,7 @@ parser.add_argument('--group_column', type=str, default=None,
 # Parse the command-line arguments
 args = parser.parse_args()
 
+
 # Extract the dataset file path and target column name
 csv_file = args.dataset
 target_column_name = args.target_column
@@ -44,6 +46,13 @@ for param_entry in param_grid_str.split('|'):
 data = pd.read_csv(csv_file)
 y = data[target_column_name]  # Target variable
 unique_y = data[target_column_name].nunique()
+
+# check how many groups are there. set n_outer_splits to #groups if #groups < n_outer_splits
+if args.group_column:
+    unique_g = data[args.group_column].nunique()
+    if args.n_outer_splits > unique_g:
+        args.n_outer_splits = unique_g
+        warnings.warn('Set outer-loop CV folds to number of groups because user-defined number of folds is larger than number of groups.')
 
 outer_cv = GroupKFold(n_splits=args.n_outer_splits)
 inner_cv = KFold(n_splits=args.n_inner_splits)
@@ -71,7 +80,7 @@ for train_index, test_index in splits:
     X_test_scaled = scaler.transform(X_test_outer)
 
     # Inner cross-validation for hyperparameter tuning
-    grid_search = GridSearchCV(estimator=LogisticRegression(), param_grid=param_grid, scoring='accuracy', cv=inner_cv)
+    grid_search = GridSearchCV(estimator=LogisticRegression(solver='sag', max_iter=1000), param_grid=param_grid, scoring='accuracy', cv=inner_cv)
     grid_search.fit(X_train_scaled, y_train_outer)
 
     # Get the best hyperparameters from inner CV
@@ -79,9 +88,9 @@ for train_index, test_index in splits:
 
     # Train a model with the best hyperparameters on the full training set
     if(unique_y == 2):
-        best_model = LogisticRegression(**best_hyperparameters, max_iter=100)
+        best_model = LogisticRegression(**best_hyperparameters, max_iter=100, solver='sag')
     else:
-        best_model = LogisticRegression(**best_hyperparameters, multi_class='multinomial', max_iter=1000)
+        best_model = LogisticRegression(**best_hyperparameters, multi_class='multinomial', max_iter=1000, solver='sag')
     best_model.fit(X_train_scaled, y_train_outer)
     y_train_pred = best_model.predict(X_train_scaled)
     acc_train = accuracy_score(y_train_outer, y_train_pred)
