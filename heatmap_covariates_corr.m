@@ -73,7 +73,7 @@ rotateXLabels( gca(), 30 );
 
 for i = 1:length(cont_cate.names1)
     for j = 1:length(cont_cate.names2)
-        text(i-0.3, j, sprintf('%.4f', cont_cate.acc(i,j)), 'fontsize', 13)
+        text(j-0.3, i, sprintf('%.4f', cont_cate.acc(i,j)), 'fontsize', 13)
     end
 end
 
