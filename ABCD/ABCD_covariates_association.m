@@ -25,6 +25,8 @@ function ABCD_covariates_association(outdir, Euler_lh, Euler_rh, subj_ls, my_phe
 %     The local location of ABCD phenotypes folder. Default:
 %     '/data/project/predict_stereotype/datasets/inm7_superds/original/abcd/phenotype/phenotype'
 
+addpath(fileparts(fileparts(mfilename('fullpath'))))
+
 if(~exist('ABCD_csv_dir', 'var') || isempty(ABCD_csv_dir))
     ABCD_csv_dir = '/data/project/predict_stereotype/datasets/inm7_superds/original/abcd/phenotype/phenotype';
 end
@@ -266,87 +268,11 @@ cont_cate.acc(4,3) = LogisticReg(outdir, age, sex, site);
 cont_cate.acc(4,4) = LogisticReg(outdir, age, income, site);
 
 save(fullfile(outdir, 'corr.mat'), 'continuous', 'categoric', 'cont_cate')
+
+rmpath(fileparts(fileparts(mfilename('fullpath'))))
     
 end
 
 
-%% --------------------------------------------------
-function V = CramerV(outdir, varA, varB)
-
-% V = CramerV(outdir, varA, varB)
-%
-% 
-
-% Define input and output filenames
-inputFilename = fullfile(outdir, 'input.txt');
-outputFilename = fullfile(outdir, 'output.txt');
-
-% Write the categorical variables to the input file
-fileID = fopen(inputFilename, 'w');
-fprintf(fileID, '%s\n', 'Category_A');
-fprintf(fileID, '%s\n', strjoin(varA, ','));
-fprintf(fileID, '%s\n', 'Category_B');
-fprintf(fileID, '%s\n', strjoin(varB, ','));
-fclose(fileID);
-
-% Call the R script with input and output filenames
-script_dir = fileparts(mfilename('fullpath'));
-rScriptFilename = fullfile(fileparts(script_dir), 'CramerV_covariates.r');
-command = sprintf('Rscript %s %s %s', rScriptFilename, inputFilename, outputFilename);
-status = system(command);
-
-% Check the status of the execution
-if status == 0
-    disp('R script executed successfully.');
-
-    % Read the result from the output file
-    V = dlmread(outputFilename);
-    delete(outputFilename)
-else
-    error('Error executing R script.');
-end
-
-delete(inputFilename)
-end
 
 
-%% --------------------------------------------------
-function acc = LogisticReg(outdir, feature, target, group)
-
-% acc = LogisticReg(outdir, feature, target, group)
-%
-% 
-
-% Define input and output filenames
-inputFilename = fullfile(outdir, 'input.txt');
-outputFilename = fullfile(outdir, 'output.txt');
-
-% write input data to the csv file
-idx = isnan(feature) | cellfun(@isempty, target) | cellfun(@isempty, group);
-feature = feature(~idx);
-target = target(~idx);
-group = group(~idx);
-T = table(feature, target, group);
-T.Properties.VariableNames = {'feature', 'target', 'group'};
-writetable(T, inputFilename);
-
-% Call the Python script with input and output filenames
-script_dir = fileparts(mfilename('fullpath'));
-scriptFilename = fullfile(fileparts(script_dir), 'LogisticReg_covariates.py');
-command = sprintf('python3 %s %s target %s --group_column group', scriptFilename, inputFilename, outputFilename);
-status = system(command);
-
-% Check the status of the execution
-if status == 0
-    disp('Python script executed successfully.');
-
-    % Read the result from the output file
-    acc = dlmread(outputFilename);
-    delete(outputFilename)
-else
-    error('Error executing Python script.');
-end
-
-delete(inputFilename)
-    
-end
