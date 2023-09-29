@@ -44,7 +44,7 @@ euler = (lh_euler + rh_euler) ./ 2;
 ICV = dlmread(ICV_txt);
 FD = dlmread(FD_txt);
 
-%% read parental education, ethnicity, age, sex, family income
+%% read education, ethnicity, age, sex, family income
 start_dir = pwd;
 
 subj_hdr = 'src_subject_id';
