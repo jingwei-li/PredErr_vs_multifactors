@@ -22,9 +22,9 @@ function ABCD_PredErr_vs_motion_subsample(subj_ls, pheno_csv, avgPredErr, bhvr_c
 %   - figout
 %     Output name (without extension, full-path).
 %   - s_size
-%     Size of each subsample.
+%     Size of each subsample, e.g. 455.
 %   - repeats
-%     Number of repetitions of subsampling.
+%     Number of repetitions of subsampling, e.g. 100.
 %
 
 addpath(fullfile(fileparts(fileparts(fileparts(mfilename('fullpath')))), 'subsampling'))
@@ -46,7 +46,8 @@ subjects = CBIG_text2cell(subj_ls);
 FD = d.FD(idx);
 DV = d.DVARS(idx);
 
-asso = subsample_PredErr_vs_continuous_covar(err_avg, FD, s_size, repeats);
+mkdir(fullfile(outdir, 'repeats'))
+asso = subsample_PredErr_vs_continuous_covar(err_avg, FD, s_size, repeats, bhvr_cls_names, 'FD', fullfile(outdir, 'repeats'));
 save([outmat 'FD.mat'], 'asso')
 
 hist_subsample_rho(asso, bhvr_cls_names, [figout 'FD'])

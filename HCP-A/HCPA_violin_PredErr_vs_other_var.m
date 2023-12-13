@@ -69,11 +69,16 @@ for c = 1:N
     end
     
     if(length(Xclasses) == 2)
-        [H, p] = ttest2(Ydata(~isnan(Ydata(:,1)),1), Ydata(~isnan(Ydata(:,2)),2));
+        Y1 = Ydata(~isnan(Ydata(:,1)),1);
+        Y2 = Ydata(~isnan(Ydata(:,2)),2);
+        [H, p] = ttest2(Y1, Y2);
+        effect = meanEffectSize(Y1, Y2, VarianceType="unequal");
+        effect = effect.Effect;
     else
         [p, anovatab, stats] = anova1(Ydata_anova, grp_anova, 'off');
         fprintf('ANOVA table for %s\n', titles{c})
         anovatab
+        effect = anovatab{2, 2} / anovatab{4, 2};
     end
 
     vio = violinplot(Ydata, [], [], 'ShowMean', true);
@@ -89,9 +94,9 @@ for c = 1:N
     Xlims = get(gca, 'xlim');
     Ylims = get(gca, 'ylim');
     if(length(Xclasses) == 2)
-        text(mean(Xlims)-0.28, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+        text(mean(Xlims)-0.5, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e; eff = %.2e', p, effect), 'fontsize', 11)
     else
-        text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+        text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e; eff = %.2e', p, effect), 'fontsize', 11)
     end
 
     xlabel(Xlabel, 'fontsize', 12);

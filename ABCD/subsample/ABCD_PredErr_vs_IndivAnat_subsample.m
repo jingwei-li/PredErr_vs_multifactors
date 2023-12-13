@@ -78,7 +78,12 @@ case 'ICV'
     [~, ~, idx] = intersect(subjects, d.subjectkey, 'stable');
     ICV = d.ICV(idx);
 
-    asso = subsample_PredErr_vs_continuous_covar(err_avg, ICV, s_size, repeats);
+    outdir = fileparts(figout);
+    if(~exist(fullfile(outdir, 'repeats'), 'dir'))
+        mkdir(fullfile(outdir, 'repeats'))
+    end
+
+    asso = subsample_PredErr_vs_continuous_covar(err_avg, ICV, s_size, repeats, bhvr_cls_names, 'ICV', fullfile(outdir, 'repeats'));
     save(outmat, 'asso')
 
     hist_subsample_rho(asso, bhvr_cls_names, figout)

@@ -1,6 +1,6 @@
-function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, s_size, repeats)
+function asso = subsample_PredErr_vs_continuous_covar(err_avg, covar, s_size, repeats, bhvr_cls_names, covar_name, outdir)
 
-% ass = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, s_size, repeats)
+% ass = subsample_PredErr_vs_continuous_covar(err_avg, s_size, repeats, bhvr_cls_names, covar_name, outdir)
 %
 % Basic function of subsampling.
 %
@@ -8,7 +8,7 @@ function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, s_siz
 %     Struct. Average prediction error from the groups of behavioral measures which share 
 %     similar patterns in the errors. It is computed by the function `ABCD_avgPredErr`.
 %   - covar
-%     
+%     A vector, the covariate values.
 %   - s_size
 %     Size of each subsample.
 %   - repeats
@@ -16,6 +16,14 @@ function asso = ABCD_subsample_PredErr_vs_continuous_covar(err_avg, covar, s_siz
 %
 %   - asso
 %     Struct. The association between averaged errors and covariate under examination.
+%   - bhvr_cls_name
+%     Optional. If this variable is passed in, then a scatter plot is created for each 
+%     subsample and each behavioral class.
+%   - covar_name
+%     Optional, the name of current covariate shown in a plot. If this variable is passed 
+%     in, then a scatter plot is created for each subsample and each behavioral class. 
+
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 alpha = 0.05;
 N = length(fieldnames(err_avg));
@@ -39,6 +47,31 @@ for c = 1:N
         Y = Ydata(sample);
         [rho(n), pval(n)] = corr(X, Y);
         [s_rho(n), s_pval(n)] = corr(X, Y, 'Type', 'Spearman');
+
+        %% create scatter plot for each subsample
+        if(exist('bhvr_cls_names', 'var') && exist('covar_name', 'var') && exist('outdir', 'var'))
+            f = figure;
+            set(gcf, 'position', [0 0 400 350])
+            scatter_kde(X, Y, 'MarkerSize', 25, 'filled')
+            hold on
+            xli = get(gca, 'xlim');
+            xpoints = xli(1):((xli(2)-xli(1))/5):xli(2);
+
+            p = polyfit(X, Y, 1);
+            r = polyval(p, xpoints);
+            plot(xpoints, r, 'k', 'LineWidth', 2)
+            hold off
+
+            title(sprintf('X- vs Y-axes Peason''s r: %.3f, p value: %.2e\n Spearman rho: %.3f, p value: %.2e', rho(n), pval(n), s_rho(n), s_pval(n)))
+            xlabel(bhvr_cls_names{c}, 'fontsize', 12)
+            ylabel(covar_name, 'fontsize', 12);
+
+            outname = fullfile(outdir, [bhvr_cls_names{c} '_repeat' num2str(n)]);
+            export_fig(outname, '-png', '-nofontswap', '-a1');
+            set(gcf, 'color', 'w')
+            hgexport(f, outname)
+            close
+        end
     end
     asso.(['class' num2str(c)]).rho = rho;
     asso.(['class' num2str(c)]).pval = pval;
@@ -70,5 +103,6 @@ for c = 1:N
     %asso.(['class' num2str(c)]).s_rho_CI = [lowerBound upperBound];
 end
 
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
     
 end

@@ -80,16 +80,23 @@ for c = 1:N
     end
     
     if(length(Xclasses) == 2)
-        [H, p] = ttest2(Ydata(~isnan(Ydata(:,1)),1), Ydata(~isnan(Ydata(:,2)),2));
+        Y1 = Ydata(~isnan(Ydata(:,1)),1);
+        Y2 = Ydata(~isnan(Ydata(:,2)),2);
+        [H, p] = ttest2(Y1, Y2);
+        effect = meanEffectSize(Y1, Y2, VarianceType="unequal");
+        effect = effect.Effect;
     else
         [p, anovatab, stats] = anova1(Ydata_anova, grp_anova, 'off');
         fprintf('ANOVA table for %s\n', titles{c})
         anovatab
+        effect = anovatab{2, 2} / anovatab{4, 2};
 
         if(exist('factor_site', 'var'))
             [p2, tbl2, stats2] = anovan(Ydata_anova, {grp_anova, site_anova}, 'model', 2, 'display', 'off');
             fprintf('Two-way ANOVA table for %s\n', titles{c})
             tbl2
+            effect_main = tbl2{2, 2} / tbl2{6, 2};
+            effect_site = tbl2{3, 2} / tbl2{6, 2};
         end
     end
 
@@ -106,13 +113,13 @@ for c = 1:N
     Xlims = get(gca, 'xlim');
     Ylims = get(gca, 'ylim');
     if(length(Xclasses) == 2)
-        text(mean(Xlims)-0.28, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+        text(mean(Xlims)-0.5, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e; eff = %.2e', p, effect), 'fontsize', 11)
     else
         if(~exist('p2', 'var'))
-            text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e', p), 'fontsize', 11)
+            text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('p = %.2e; eff = %.2e', p, effect), 'fontsize', 11)
         else
-            text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('Factor 1 p = %.2e', p2(1)), 'fontsize', 11)
-            text(Xlims(1) + 0.3, Ylims(2)-0.12*(Ylims(2)-Ylims(1)), sprintf('Factor 2 (site) p = %.2e', p2(2)), 'fontsize', 11)
+            text(Xlims(1) + 0.3, Ylims(2)-0.02*(Ylims(2)-Ylims(1)), sprintf('Factor 1 p = %.2e; eff = %.2e', p2(1), effect_main), 'fontsize', 11)
+            text(Xlims(1) + 0.3, Ylims(2)-0.12*(Ylims(2)-Ylims(1)), sprintf('Factor 2 (site) p = %.2e; eff = %.2e', p2(2), effect_site), 'fontsize', 11)
             text(Xlims(1) + 0.3, Ylims(2)-0.22*(Ylims(2)-Ylims(1)), sprintf('Interaction p = %.2e', p2(3)), 'fontsize', 11)
         end
     end
