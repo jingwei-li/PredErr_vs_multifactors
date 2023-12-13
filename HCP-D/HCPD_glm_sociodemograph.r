@@ -1,5 +1,6 @@
 # Author: Jingwei Li
 # Date: 22/09/2023
+# specific for HCP-D dataset because only in this dataset the income values are continuous
 
 # Get command line arguments
 args <- commandArgs(trailingOnly = TRUE)
