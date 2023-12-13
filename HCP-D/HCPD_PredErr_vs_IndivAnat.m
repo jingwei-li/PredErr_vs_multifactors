@@ -64,6 +64,13 @@ case 'ICV'
     Ylabel = 'ICV';
     outbase = 'PredErr_vs_ICV';
     HCPA_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 1)
+case 'Jacobian'
+    Jacobian_ls = internal.stats.parseArgs({'Jacobian_ls'}, {[]}, varargin{:});
+    Jacobian = dlmread(Jacobian_ls);
+
+    Ylabel = 'Jacobian STD';
+    outbase = 'PredErr_vs_Jacobian';
+    HCPA_scatter_PredErr_vs_other_var(err_avg, Jacobian, outdir, outbase, Xlabels, Ylabel, 1)
 end
 
 end

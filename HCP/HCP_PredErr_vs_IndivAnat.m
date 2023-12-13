@@ -34,7 +34,7 @@ function HCP_PredErr_vs_IndivAnat(avgPredErr, outdir, Xlabels, anat_metric, vara
 %    For example, (..., 'subj_ls', '/home/xxx/subjects_wIncome_948.txt',
 %                  'csv', '/home/xxx/FreeSurfer_jingweili_6_20_2023_1200subjects.csv')
 %    
-    
+
 load(avgPredErr)
 
 switch anat_metric
@@ -63,8 +63,16 @@ case 'ICV'
     Ylabel = 'ICV';
     outbase = 'PredErr_vs_ICV';
     HCP_scatter_PredErr_vs_other_var(err_avg, ICV, outdir, outbase, Xlabels, Ylabel, 1)
+case 'Jacobian'
+    Jacobian_ls = internal.stats.parseArgs({'Jacobian_ls'}, {[]}, varargin{:});
+    Jacobian = dlmread(Jacobian_ls);
+
+    Ylabel = 'Jacobian STD';
+    outbase = 'PredErr_vs_Jacobian';
+    HCP_scatter_PredErr_vs_other_var(err_avg, Jacobian, outdir, outbase, Xlabels, Ylabel, 1)
 otherwise
     error('Unknown metric: %s', anat_metric)
 end
+
 
 end
