@@ -131,6 +131,13 @@ case 'bbr_cost'
     Ylabel = 'T1-T2* registration (bbregister) cost';
     outbase = 'PredErr_vs_bbr';
     ABCD_scatter_PredErr_vs_other_var(err_avg, bbr, outdir, outbase, Xlabels, Ylabel, 1)
+case 'Jacobian'
+    Jacobian_ls = internal.stats.parseArgs({'Jacobian_ls'}, {[]}, varargin{:});
+    Jacobian = dlmread(Jacobian_ls);
+
+    Ylabel = 'Jacobian STD';
+    outbase = 'PredErr_vs_Jacobian';
+    ABCD_scatter_PredErr_vs_other_var(err_avg, Jacobian, outdir, outbase, Xlabels, Ylabel, 1)
 otherwise
     error('Unknown metric: %s', anat_metric)
 end
