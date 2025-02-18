@@ -1,7 +1,0 @@
-cogcomp01,dccs01,deldisk01,er4001,flanker01,lswmt01,nffi01,orrt01,pcps01,psm01,psqi01,self_effic01,tlbx_emsup01,tlbx_friend01,tlbx_perhost01,tlbx_rej01
-nih_fluidcogcomp_ageadjusted,nih_dccs_ageadjusted,auc_40000,er40_c_cr,nih_flanker_ageadjusted,age_corrected_standard_score,neo2_score_ag,read_acss,nih_patterncomp_ageadjusted,nih_picseq_ageadjusted,psqi_total,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_tscore
-nih_crycogcomp_ageadjusted,,,er40_c_ang,,,neo2_score_co,,,,,,,,,
-nih_totalcogcomp_ageadjusted,,,er40_c_fear,,,neo2_score_ex,,,,,,,,,
-,,,er40_c_hap,,,neo2_score_ne,,,,,,,,,
-,,,er40_c_noe,,,neo2_score_op,,,,,,,,,
-,,,er40_c_sad,,,,,,,,,,,
