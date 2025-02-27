@@ -8,7 +8,7 @@ from os.path import isdir, dirname, join
 from os import system, listdir
 import argparse
 
-parser = argparse.ArgumentParser(description='Compute nuisance confounds for one HCP-Aging subject',
+parser = argparse.ArgumentParser(description='Compute nuisance confounds for one HCP-D subject',
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument('out', help='Output list (full path).')
 parser.add_argument('-d', help='Local path of HCP-Development folder under inm-7 superdataset.',
@@ -17,12 +17,10 @@ parser.add_argument('-s', help='Subject list.', default='')
 args = parser.parse_args()
 
 # Set-up
-code_dir = dirname(dirname(__file__))
 if not args.s:
     sublist = pd.DataFrame([filename for filename in listdir(args.d) if filename.startswith('HCD')])
 else:
     sublist = pd.read_csv(args.s, header=None)
-    sublist[0] = sublist[0].astype(str) + '_V1_MR'
 
 allFD = np.empty(sublist.shape)
 for i in range(0,4):
@@ -58,9 +56,9 @@ for sub in range(0, len(sublist)):
         # Get FD
         FD[i] = pd.read_table(meanFD_file, sep='  ', header=None, engine='python').values
 
-        # write to all subjects' FD and DVARS lists
+        # write to all subjects' FD lists
         allFD[sub] = np.nanmean(FD)
-        print('Computed mean FD and DVARS for sub %d: %s run: %s' % (sub, subject, run))
+        print('Computed mean FD for sub %d: %s run: %s' % (sub, subject, run))
 
         i = i + 1
 

@@ -1,0 +1,51 @@
+## HCP Development data processing
+
+### Previously computed data
+
+Subjects with all resting-state runs available:
+
+```console
+python3 create_allRun_sublists.py ${proj_dir}/phenotype ${proj_dir}/lists \
+    ${proj_dir}/scripts/PredErr_vs_multifactors/HCP-D/lists/HCP-D_exclude.csv
+```
+
+RSFC computed in the mpp project: 
+
+```console
+datalad clone git@gin.g-node.org:/jadecci/multimodal_features.git
+```
+
+### Extract features/confounds
+
+1. DVARS
+
+```console
+./HCP-D_collect_DVARS.sh -c ${proj_dir}/containers/images/neurodesk/neurodesk-fsl--6.0.5.1.simg \
+    -d ${proj_dir}/data/datasets_repo/original/hcp/hcp_development \
+    -s ${proj_dir}/lists/HCP-D_allRun.csv \
+    -o ${proj_dir}/results/HCP-D/lists/dvars
+```
+
+```console
+python3 HCP-D_average_DVARS.py -s ${proj_dir}/lists/HCP-D_allRun.csv
+```
+
+2. FD
+
+```console
+python3 HCP-D_collect_FD.py ${proj_dir}/results/HCP-D/lists/FD.allsub.txt \
+    -d ${proj_dir}/data/datasets_repo/original/hcp/hcp_development \
+    -s ${proj_dir}/lists/HCP-D_allRun.csv
+```
+
+3. ICV
+
+```console
+python3 HCP-D_collect_ICV.sh -outdir ${proj_dir}/results/HCP-D/lists -outbase_suffix allsub
+```
+
+4. Confounds: age, sex, site, education (saved together wigh DVARS, FD, and ICV)
+
+```console
+python3 HCP-D_extract_targets_confounds.py
+```

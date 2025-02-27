@@ -1,7 +1,5 @@
-import numpy as np
 import pandas as pd
 import argparse
-from pathlib import Path
 import os, copy
 import datalad.api as dl
 
@@ -44,7 +42,7 @@ parser.add_argument("--ICV_txt", type=str, help="Absolute path to the text file 
 parser.add_argument("--FD_txt", type=str, help="Absolute path to the text file of all subjects' framewise displacement")
 parser.add_argument("--DV_txt", type=str, help="Absolute path to the text file of all subjects' DVARS")
 parser.add_argument("--psy_csv", type=str,  
-                    help="A csv file with psychometric measures. The headers in this csv file are the phenotype filenames from HCP-A dataset.")
+                    help="A csv file with psychometric measures. The headers in this csv file are the phenotype filenames from HCP-D dataset.")
 parser.add_argument('--colloq_csv', type=str,
                     help='A csv file with colloquial names of the psychometric measures one-to-one corresponded to "psy_csv".')
 parser.add_argument("--out_dir", dest="out_dir", type=str, 

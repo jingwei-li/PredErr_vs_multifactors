@@ -37,7 +37,10 @@ def read_motion(
         mt_file = Path(func_dir, f"{subject}_{ses}_task-rest_{run}_desc-confounds_timeseries.tsv")
         dl.get(mt_file, dataset=sub_dir)
         motion = pd.read_table(mt_file)
-        frame_start = int(motion["non_steady_state_outlier00"].sum())
+        if "non_steady_state_outlier00" in motion.columns:
+            frame_start = int(motion["non_steady_state_outlier00"].sum())
+        else:
+            frame_start = 0
         fd_runs[run_i] = np.mean(motion["rmsd"].iloc[frame_start:])
         dvars_runs[run_i] = np.mean(motion["dvars"].iloc[frame_start:])
         dl.drop(mt_file, dataset=sub_dir, reckless="kill")

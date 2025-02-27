@@ -1,19 +1,11 @@
 #!/bin/bash
 
-DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-REPO_DIR=$(dirname $DIR)
-container="/home/jli/containers/images/neurodesk/neurodesk-fsl--6.0.5.1.simg"
-subj_ls=/data/project/predict_stereotype/new_results/HCP-D/lists/all_subjects.csv
-data_dir="/home/jli/datasets/inm7_superds/original/hcp/hcp_development"
-#outdir="/data/project/predict_stereotype/new_results/HCP-D/lists/dvars"
-outdir="/data/project/predict_stereotype/new_results/HCP-D/lists/dvars_nonclean"
-
 main() {
     subjects=$(cat $subj_ls)
     for s in $subjects; do
         cd $data_dir
-        datalad get -n ${s}_V1_MR
-        cd ${s}_V1_MR/MNINonLinear
+        datalad get -n $s
+        cd ${s}/MNINonLinear
         datalad get -n .
         git -C . config --local --add remote.datalad.annex-ignore true
         cd Results
@@ -24,17 +16,19 @@ main() {
                 #in=${run}_hp0_clean.nii.gz
                 in=${run}.nii.gz
                 out=$outdir/${s}_${run}
+                t=$outdir/$s
                 if [[ ! -f ${out}_conf ]]; then
                     datalad get -s inm7-storage $in
-                
-                    t=$outdir/$s
                     mkdir -p $t
 
-                    singularity run $container fsl_motion_outliers -i $in -o ${out}_conf -t $t -s $out --dvars --nomoco
+                    cmd="singularity run -B $data_dir/$s/MNINonLinear -B $outdir $container"
+                    cmd="$cmd fsl_motion_outliers -i $(pwd)/$in -o ${out}_conf -t $t -s $out"
+                    cmd="$cmd --dvars --nomoco"
+                    eval $cmd
                     echo "Calculated DVARS for $s, run $run"
 
                     datalad drop $in
-                    rm -r $t
+                    rm -rf $t
                 else
                     echo "DVARS for $s, run $run already exists."
                 fi
@@ -42,7 +36,7 @@ main() {
             fi
         done
         cd $data_dir
-        datalad uninstall ${s}_V1_MR --recursive
+        datalad uninstall $s --recursive
     done
 }
 
@@ -51,7 +45,12 @@ main() {
 #############################
 usage() { echo "
 NAME:
-    HCP-A_collect_DVARS_onesub.sh
+    HCP-D_collect_DVARS.sh -c container -d data_dir -s subj_ls -o outdir
+ARGUMENTS:
+    -c      absolute path to FSL container
+    -d      absolute path to raw data directory (containing subject folders)
+    -s      absolute path to subject list
+    -o      absolute path to output directory
 " 1>&2; exit 1; }
 
 ##########################################

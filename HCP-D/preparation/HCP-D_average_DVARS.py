@@ -1,19 +1,18 @@
 import numpy as np
 import pandas as pd
-from os.path import isfile, dirname, join
-from os import system
+from os.path import isfile, join
 import argparse
 
-proj_dir = '/home/jli/my_projects/fairAI/from_sg'
-code_dir = dirname(dirname(__file__))
+proj_dir = '/data/project/parcellate_ABCD_preprocessed'
+
 parser = argparse.ArgumentParser(description='Average DVARS timeseries for each run, each subject. Summarize',
                                  formatter_class=lambda prog: argparse.ArgumentDefaultsHelpFormatter(prog, width=100))
 parser.add_argument('-d', help='The folder that contains one DVARS timeseries text file per run per subject.',
-    default=join(proj_dir, 'new_results', 'HCP-D', 'lists', 'dvars'))
+    default=join(proj_dir, 'results', 'HCP-D', 'lists', 'dvars'))
 parser.add_argument('-s', help='The subject list.', 
-    default=join(proj_dir, 'new_results', 'HCP-D', 'lists', 'all_subjects.csv'))
+    default=join(proj_dir, 'results', 'HCP-D', 'lists', 'all_subjects.csv'))
 parser.add_argument('-o', help='The output file.',
-    default=join(proj_dir, 'new_results', 'HCP-D', 'lists', 'DV.allsub.txt'))
+    default=join(proj_dir, 'results', 'HCP-D', 'lists', 'DV.allsub.txt'))
 args = parser.parse_args()
 
 with open(args.s, 'r') as f:

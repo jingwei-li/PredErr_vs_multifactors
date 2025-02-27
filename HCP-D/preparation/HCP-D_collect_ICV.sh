@@ -5,11 +5,8 @@
 #
 # Author: Jingwei Li, 30/06/2023
 
-DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-REPO_DIR=$(dirname $DIR)
-
-data_dir=/data/project/predict_stereotype/datasets/inm7_superds/original/hcp/hcp_development
-subj_ls=/data/project/predict_stereotype/new_results/HCP-D/lists/all_subjects.csv
+data_dir=/data/project/parcellate_ABCD_preprocessed/data/datasets_repo/original/hcp/hcp_development
+subj_ls=/data/project/predict_stereotype/lists/HCP-D_allRun.csv
 outdir=
 outbase_suffix=
 
@@ -21,12 +18,12 @@ main() {
     touch $out
     for s in $subjects; do
         cd $data_dir
-        datalad get -n ${s}_V1_MR
-        git -C ${s}_V1_MR config --local --add remote.datalad.annex-ignore true
-        cd $data_dir/${s}_V1_MR/T1w
+        datalad get -n ${s}
+        git -C ${s} config --local --add remote.datalad.annex-ignore true
+        cd $data_dir/${s}/T1w
         datalad get -n .
         git -C . config --local --add remote.datalad.annex-ignore true
-        cd $data_dir/${s}_V1_MR/T1w/${s}_V1_MR/stats
+        cd $data_dir/${s}/T1w/${s}/stats
         git -C . config --local --add remote.datalad.annex-ignore true
         datalad get -s inm7-storage aseg.stats
 
@@ -60,11 +57,6 @@ ARGUMENTS:
     -outdir         <outdir>         : Output directory, full path.
     -outbase_suffix <outbase_suffix> : The output file names, for instance for the left hemisphere, 
                                        will be <outdir>/lh_Euler.<outbase_suffix>.txt
-
-EXAMPLE:
-    $DIR/HCP-D_collect_ICV.sh \\
-    -data_dir <path_to_HCP-D> -subj_ls <path_to_list>/all_subjects.csv \\
-    -outdir <path_to_output_files> -outbase_suffix allsub
 
 " 1>&2; exit 1; }
 
