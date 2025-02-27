@@ -49,7 +49,8 @@ parser.add_argument("--out_dir", dest="out_dir", type=str,
                     help="Absolute path to the output directory")
 args = parser.parse_args()
 
-data = pd.read_csv(args.sub_list, header=None, names=['Sub_Key'], squeeze=False)
+data = pd.read_csv(args.sub_list, header=None, names=['Sub_Key'])
+data["Sub_Key"] = data["Sub_Key"].str.removesuffix("_V1_MR")
 subjects = copy.deepcopy(data)
 # Psychometric variables
 colnames = []

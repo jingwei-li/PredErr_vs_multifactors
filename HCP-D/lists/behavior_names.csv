@@ -1,8 +1,7 @@
-bisbas01,cbcl01,cogcomp01,dccs01,deldisk01,er4001,flanker01,lswmt01,orrt01,pcps01,psm01,self_effic01,tlbx_emsup01,tlbx_friend01,tlbx_perhost01,tlbx_rej01,tpvt01,upps01
-bissc_total,cbcl_anxious_raw,nih_fluidcogcomp_ageadjusted,nih_dccs_ageadjusted,auc_40000,er40_c_cr,nih_flanker_ageadjusted,age_corrected_standard_score,read_acss,nih_patterncomp_ageadjusted,nih_picseq_ageadjusted,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_tscore,tpvt_acss,premed_score
-bas_drive,cbcl_somatic_c_raw,nih_crycogcomp_ageadjusted,,,er40_c_ang,,,,,,,,,,,,senseek_score
-bas_fs,cbcl_attention_raw,nih_totalcogcomp_ageadjusted,,,er40_c_fear,,,,,,,,,,,,persev_score
-bas_rr,cbcl_aggressive_raw,,,,er40_c_hap,,,,,,,,,,,,upps_negu
-,cbcl_social_p_raw,,,,er40_c_noe,,,,,,,,,,,,upps_posu
-,cbcl_thought_raw,,,,er40_c_sad,,,,,,,,,,,,
-,cbcl_rulebreak_raw,,,,,,,,,,,,,,,,
+cogcomp01,dccs01,deldisk01,er4001,flanker01,lswmt01,orrt01,pcps01,psm01,self_effic01,tlbx_emsup01,tlbx_friend01,tlbx_perhost01,tlbx_rej01,tpvt01
+nih_fluidcogcomp_ageadjusted,nih_dccs_ageadjusted,auc_40000,er40_c_cr,nih_flanker_ageadjusted,age_corrected_standard_score,read_acss,nih_patterncomp_ageadjusted,nih_picseq_ageadjusted,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_rawscore,nih_tlbx_tscore,tpvt_acss
+nih_crycogcomp_ageadjusted,,,er40_c_ang,,,,,,,,,,,
+nih_totalcogcomp_ageadjusted,,,er40_c_fear,,,,,,,,,,,
+,,,er40_c_hap,,,,,,,,,,,
+,,,er40_c_noe,,,,,,,,,,,
+,,,er40_c_sad,,,,,,,,,,,

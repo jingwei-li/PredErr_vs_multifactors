@@ -47,5 +47,13 @@ python3 HCP-D_collect_ICV.sh -outdir ${proj_dir}/results/HCP-D/lists -outbase_su
 4. Confounds: age, sex, site, education (saved together wigh DVARS, FD, and ICV)
 
 ```console
-python3 HCP-D_extract_targets_confounds.py
+python3 HCP-D_extract_targets_confounds.py \
+    --in_dir ${proj_dir}/data/datasets_repo/original/hcp/hcp_development/phenotype \
+    --sub_list ${proj_dir}/lists/HCP-D_allRun.csv \
+    --ICV_txt ${proj_dir}/results/HCP-D/lists/ICV.allsub.txt \
+    --FD_txt ${proj_dir}/results/HCP-D/lists/FD.allsub.txt \
+    --DV_txt ${proj_dir}/results/HCP-D/lists/DV.allsub.txt \
+    --psy_csv ${proj_dir}/scripts/PredErr_vs_multifactors/HCP-D/lists/behavior_names.csv \
+    --colloq_csv ${proj_dir}/scripts/PredErr_vs_multifactors/HCP-D/lists/colloquial_names.csv \
+    --out_dir ${proj_dir}/results/HCP-D/lists
 ```
