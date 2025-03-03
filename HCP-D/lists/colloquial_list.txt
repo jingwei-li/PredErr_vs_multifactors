@@ -1,14 +1,3 @@
-Behavioral Inhibition
-BAS - Drive
-BAS - Fun Seeking
-BAS - Reward Responsiveness
-Anxious Depressed
-Somatic Complaints
-Attention Problems
-Aggressive Behavior
-Social Problems
-Thought Problems
-Rule-breaking Behavior
 Fluid Cognition
 Crystallized Cognition
 Total Cognition
@@ -31,8 +20,3 @@ Friendship
 Perceived Hostility
 Perceived Rejection
 Picture vocabulary
-Lack of Premeditation
-Sensation Seeking
-Lack of Perseverance
-Negative Urgency
-Positive Urgency

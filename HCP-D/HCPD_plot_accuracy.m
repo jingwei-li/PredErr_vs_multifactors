@@ -5,7 +5,6 @@ addpath(genpath(fullfile(fileparts(script_dir), 'external_packages', 'fig_util')
 
 method = 'SVR';
 atlas = 'SchMel4';
-%nrep = 200;
 nrep = 1;
 
 colloq_names = table2array(readtable(colloq_txt, 'delimiter', ',', 'ReadVariableNames', false));
@@ -63,7 +62,7 @@ set(gca, 'tickdir', 'out', 'box', 'off')
 if(~exist(outdir, 'dir'))
     mkdir(outdir)
 end
-outname = fullfile(outdir, [outstem ]);
+outname = fullfile(outdir, outstem);
 export_fig(outname, '-png', '-nofontswap', '-a1');
 set(gcf, 'color', 'w');
 hgexport(f, outname)

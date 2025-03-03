@@ -156,7 +156,8 @@ end
 fprintf('\n');
 
 % save performance results
-output_name = ['wbCBPP_' options.method '_' options.conf_opt '_' options.prefix ];
+% edited by Jianxiao to be compatible with newer Matlab versions
+output_name = strcat('wbCBPP_', options.method, '_', options.conf_opt, '_', options.prefix, '.mat');
 % edited by Jingwei
-save(fullfile(out_dir, [output_name '.mat']), 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test', 'yt', 'yp');
+save(fullfile(out_dir, output_name), 'r_train', 'r_test', 'nrmsd_train', 'nrmsd_test', 'yt', 'yp');
 if options.save_weights; save(fullfile(out_dir, [output_name '_weights.mat']), 'weights_all'); end
