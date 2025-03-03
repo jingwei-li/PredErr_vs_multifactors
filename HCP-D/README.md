@@ -6,7 +6,7 @@ For data processing, see README in the folder `preparation`.
 
 1. Run prediction
 
-```console
+```bash
 target_list=${proj_dir}/scripts/PredErr_vs_multifactors/HCP-D/lists/colloquial_list.txt
 psy_file=${proj_dir}/results/HCP-D/lists/HCP-D_y.csv
 conf_file=${proj_dir}/results/HCP-D/lists/HCP-D_conf.csv
@@ -21,7 +21,7 @@ done < $target_list
 
 2. Plot prediction accuracies
 
-```console
+```bash
 target_list=${proj_dir}/scripts/PredErr_vs_multifactors/HCP-D/lists/colloquial_list.txt
 acc_dir=${proj_dir}/results/HCP-D/cbpp/432sub_22behaviors
 out_dir=${proj_dir}/results/HCP-D/cbpp/figures
