@@ -7,8 +7,8 @@
 
 DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
-data_dir=/mnt/isilon/CSC2/Yeolab/Data/ABCD/process/y0/recon_all
-subj_ls=/mnt/nas/CSC7/Yeolab/PreviousLabMembers/jingweil/MyProject/fairAI/ABCD_race/scripts/lists/subjects_pass_rs_pass_pheno.txt
+data_dir=/data/project/parcellate_ABCD_preprocessed/data/ABCD_freesurfer
+subj_ls=/data/project/predict_stereotype/results/ABCD/lists/sublist_allbehavior.csv
 outdir=
 outbase_suffix=
 
@@ -20,6 +20,9 @@ main() {
     touch $lh_out
     touch $rh_out
     for s in $subjects; do
+        stats_in="$data_dir/$s/stats/aseg.stats"
+        datalad get -d $data_dir/$s $stats_in
+
         lh_holes=$(grep 'lhSurfaceHoles' $data_dir/$s/stats/aseg.stats | cut -d , -f 4 | cut -d ' ' -f 2)
         rh_holes=$(grep 'rhSurfaceHoles' $data_dir/$s/stats/aseg.stats | cut -d , -f 4 | cut -d ' ' -f 2)
 
@@ -31,6 +34,8 @@ main() {
         echo $lh_euler >> $lh_out
         echo $rh_euler >> $rh_out
         c=$(echo "$c+1" | bc)
+
+        datalad drop -d $data_dir/$s $stats_in
     done
 }
 
@@ -47,7 +52,9 @@ DESCRIPTION:
     
 ARGUMENTS:
     -data_dir       <data_dir>       : The recon-all output directory of all ABCD subjects (full path).
+                                       Default: $data_dir
     -subj_ls        <subj_ls>        : Subject list, full path.
+                                       Default: $subj_ls
     -outdir         <outdir>         : Output directory, full path.
     -outbase_suffix <outbase_suffix> : The output file names, for instance for the left hemisphere, 
                                        will be <outdir>/lh_Euler.<outbase_suffix>.txt
@@ -67,7 +74,7 @@ if [ $# -eq 0 ]; then
 	usage; 1>&2; exit 1
 fi
 
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
 	flag=$1; shift;
 	
 	case $flag in

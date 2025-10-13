@@ -1,0 +1,51 @@
+Visual Episodic Memory
+Cognitive Flexibility (DCCS)
+Inhibition (Flanker Task)
+Reading (Pronunciation)
+Processing Speed
+Spatial Orientation
+Sustained Attention - Sens.
+Sustained Attention - Spec.
+Verbal Episodic Memory
+Working Memory (List Sorting)
+Cognitive Status (MMSE)
+Sleep Quality (PSQI)
+Walking Endurance
+Walking Speed
+Manual Dexterity
+Grip Strengh
+Odor Identification
+Pain Interference Survey
+Taste Intensity
+Contrast Sensitivity
+Emotional Face Matching
+Arithmetic
+Social Cognition - Random
+Social Cognition - Interaction
+Agreeableness (NEO)
+Openness (NEO)
+Conscientiousness (NEO)
+Neuroticism (NEO)
+Extraversion (NEO)
+Emot. Recog. - Total
+Emot. Recog. - Angry
+Emot. Recog. - Fear
+Emot. Recog. - Happy
+Emot. Recog. - Neutral
+Emot. Recog. - Sad
+Anger - Affect
+Anger - Hostility
+Anger - Aggresion
+Fear - Affect
+Fear - Somatic Arousal
+Sadness
+Meaning & Purpose
+Positive Affect
+Friendship
+Loneliness
+Perceived Hostility
+Perceived Rejection
+Emotion Support
+Instrument Support
+Perceived Stress
+Self-Efficacy

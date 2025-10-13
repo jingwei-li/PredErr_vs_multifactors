@@ -23,7 +23,7 @@ function CBPP_wholebrain(fc, y, conf, cv_ind, out_dir, options)
 % Options:
 %       - method      :
 %                      Regression method to use. Available options: 'MLR' (multiple linear regression), 'SVR' (Support 
-%                      Vector Regression), 'EN' (Elastic Nets), 'RR' (ridge regression)
+%                      Vector Regression), 'EN' (Elastic Nets), 'RR' (ridge regression), 'KRR' (kernel ridge regression)
 %                      Default: 'SVR'
 %       - prefix      :
 %                      Prefix for output filename. If all setting are default, the output file will be named with the 
@@ -80,8 +80,9 @@ n_repeat = size(cv_ind, 2); % number of repeats for CV == M
 xd = size(fc, 1) * (size(fc, 1) - 1) / 2; % actual dimensionality of features x now
 x = zeros(n, xd);
 for subject = 1:n
-    upper_tri = triu(fc(:, :, subject), 1);
-    x(subject, :) = upper_tri(upper_tri ~= 0);
+    fc_sub = fc(:, :, subject);
+    triu_ind = triu(true(size(fc_sub)), 1);
+    x(subject, :) = fc_sub(triu_ind);
 end
 
 % run cross-validation
@@ -97,34 +98,35 @@ for repeat = 1:n_repeat
     cv_ind_curr = cv_ind(:, repeat);
     for fold = 1:n_fold 
         fprintf('\b\b\b\b\b\b\b%04d-%02d', repeat, fold);
-        
-        % SVR/MLR/RR: split into training and test set
-        if strcmp(options.method, 'SVR') || strcmp(options.method, 'MLR') || strcmp(options.method, 'RR')
-            train_ind = double(cv_ind_curr ~= fold);
-            test_ind = double(cv_ind_curr == fold);
+
         % EN: split into training, validation and test set
-        elseif strcmp(options.method, 'EN')
+        if strcmp(options.method, 'EN')
             if fold == n_fold; fold_inner = 1; else; fold_inner = fold + 1; end
             train_ind = (cv_ind_curr ~= fold) .* (cv_ind_curr ~= fold_inner);
             val_ind = double(cv_ind_curr == fold_inner);
             test_ind = double(cv_ind_curr == fold);
+        % SVR/MLR/RR/KRR: split into training and test set
+        else
+            train_ind = double(cv_ind_curr ~= fold);
+            test_ind = double(cv_ind_curr == fold);
         end
         
+        
         % feature selection
-        if strcmp(options.method, 'SVR') || strcmp(options.method, 'RR') % no feature selection for SVR/RR
-            feature_sel = ones(xd, yd);
-        elseif strcmp(options.method, 'MLR') % select top 500 FC edges
+        if strcmp(options.method, 'MLR') % select top 500 FC edges
             feature_sel = select_feature_corr(x(train_ind==1, :), y(train_ind==1, :), 0, 500, 0);
         elseif strcmp(options.method, 'EN') % select top 50% FC edges
             feature_sel = select_feature_corr(x(train_ind==1, :), y(train_ind==1, :), 0, 0, 50);
+        else % no feature selection for SVR/RR/KRR
+            feature_sel = ones(xd, yd);
         end
         
         % regress out confounds for 'standard' and 'str_conf' approaches
-        % except for RR, which does confound regression in inner-loop
+        % except for RR/KRR, which does confound regression in inner-loop
         y_curr = y;
-        if strcmp(options.method, 'RR') && strcmp(options.conf_opt, 'no_conf')
+        if (strcmp(options.method, 'RR')  || strcmp(options.method, 'KRR')) && strcmp(options.conf_opt, 'no_conf')
             conf_pass = [];
-        elseif strcmp(options.method, 'RR')
+        elseif strcmp(options.method, 'RR') || strcmp(options.method, 'KRR')
             conf_pass = conf;
         elseif strcmp(options.conf_opt, 'standard') || strcmp(options.conf_opt, 'str_conf')
             [y_curr(train_ind==1, :), reg_y] = regress_confounds_y(y_curr(train_ind==1, :), conf(train_ind==1, :));
@@ -137,8 +139,13 @@ for repeat = 1:n_repeat
         
         for target_ind = 1:yd
             x_sel = x(:, feature_sel(:, target_ind) == 1);
-            reg_func = str2func([options.method '_one_fold']);
-            [perf, weights] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
+            reg_func = str2func(strcat(options.method, '_one_fold'));
+            if strcmp(options.method, 'KRR') 
+                [perf, weights] = reg_func(x_sel, y_curr(:, target_ind), 'corr', conf_pass, ...
+                    cv_ind_curr, fold, 'shuffle');
+            else
+                [perf, weights] = reg_func(x_sel, y_curr(:, target_ind), cv_ind_curr, fold);
+            end
             
             % collect results
             r_train(repeat, fold, target_ind) = perf.r_train;

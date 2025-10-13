@@ -1,48 +1,39 @@
-#!/bin/sh
+#!/bin/bash
 # 
-# Collect the Euler number of each subject, for left and right hemisphere separately.
-# The output will be two text files for both hemispheres.
+# Collect the intracranial volume of each subject.
+# The output will be a text file.
 #
 # Author: Jingwei Li, 30/06/2023
 
-DIR="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-REPO_DIR=$(dirname $DIR)
-
-data_dir=/data/project/parcellate_ABCD_preprocessed/data/datasets_repo/original/hcp/hcp_development
-subj_ls=/data/project/predict_stereotype/results/HCP-D/lists/sublist_allbehavior.csv
-outdir=
-outbase_suffix=
+data_dir=/data/project/cbpp_data/human-connectome-project-openaccess/HCP1200
+subj_ls=/data/project/predict_stereotype/lists/HCP-YA_allRun.csv
 
 main() {
     c=1
-    lh_out="$outdir/lh_Euler.${outbase_suffix}.txt"
-    rh_out="$outdir/rh_Euler.${outbase_suffix}.txt"
-    touch $lh_out
-    touch $rh_out
-    while IFS= read -r s; do
+    subjects=$(cat $subj_ls)
+    out="$outdir/ICV.${outbase_suffix}.txt"
+    if [[ -f $out ]]; then rm $out; fi
+    touch $out
+    for s in $subjects; do
         cd $data_dir
         datalad get -n ${s}
-        git -C ${s} config --local --add remote.datalad.annex-ignore false
+        git -C ${s} config --local --replace-all remote.datalad.annex-ignore false
         cd $data_dir/${s}/T1w
         datalad get -n .
-        git -C . config --local --add remote.datalad.annex-ignore false
-        cd ./${s}/stats
-        datalad get -s inm7-storage aseg.stats
+        git -C . config --local --replace-all remote.datalad.annex-ignore false
+        cd $data_dir/${s}/T1w/${s}/stats
+        git -C . config --local --replace-all remote.datalad.annex-ignore false
+        datalad get aseg.stats
 
-        lh_holes=$(grep 'lhSurfaceHoles' aseg.stats | cut -d , -f 4 | cut -d ' ' -f 2)
-        rh_holes=$(grep 'rhSurfaceHoles' aseg.stats | cut -d , -f 4 | cut -d ' ' -f 2)
+        ICV=$(grep 'EstimatedTotalIntraCranialVol' aseg.stats | cut -d , -f 4 | cut -d ' ' -f 2)
 
-        lh_euler=$(awk -v x="$lh_holes" 'BEGIN { printf "%s", 2-2*x }' </dev/null)
-        rh_euler=$(awk -v x="$rh_holes" 'BEGIN { printf "%s", 2-2*x }' </dev/null)
+        echo "#$c $s: ICV = $ICV "
 
-        echo "#$c $s: lh_holes = $lh_holes rh_holes = $rh_holes lh_euler=$lh_euler rh_euler=$rh_euler"
-
-        echo $lh_euler >> $lh_out
-        echo $rh_euler >> $rh_out
+        echo $ICV >> $out
         c=$(awk -v x="$c" 'BEGIN { printf "%s", 1+x }' </dev/null)
 
         datalad drop aseg.stats
-    done < $subj_ls
+    done
 }
 
 
@@ -51,10 +42,10 @@ main() {
 #############################
 usage() { echo "
 NAME:
-    HCP-D_collect_Euler.sh
+    HCP-D_collect_ICV.sh
 
 DESCRIPTION:
-    Collect the Euler number of each subject, for left and right hemisphere separately.
+    Collect the intracranial volume of each subject.
     
 ARGUMENTS:
     -data_dir       <data_dir>       : The local path of inm-7 superdataset's subfolder that contains HCP-A subjects (full path).
@@ -64,11 +55,6 @@ ARGUMENTS:
     -outdir         <outdir>         : Output directory, full path.
     -outbase_suffix <outbase_suffix> : The output file names, for instance for the left hemisphere, 
                                        will be <outdir>/lh_Euler.<outbase_suffix>.txt
-
-EXAMPLE:
-    $DIR/HCP-D_collect_Euler.sh \\
-    -data_dir <path_to_HCP-D> -subj_ls <path_to_list>/sublist_allbehavior.csv \\
-    -outdir <path_to_output_files> -outbase_suffix sub_allbehavior
 
 " 1>&2; exit 1; }
 

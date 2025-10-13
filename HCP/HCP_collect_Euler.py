@@ -4,9 +4,15 @@ import numpy as np
 
 # input arguments
 parser = argparse.ArgumentParser()
-parser.add_argument('--subj_ls', help='HCP subject list.', default='/data/project/predict_stereotype/from_sg/HCP_race/scripts/lists/subjects_wIncome_948.txt')
-parser.add_argument('--csv', help='FreeSurfer CSV.', default='/data/project/predict_stereotype/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv')
-parser.add_argument('--outdir', help='Output directory.', default='/data/project/predict_stereotype/new_results/HCP/lists')
+parser.add_argument(
+    '--subj_ls', help='HCP subject list.',
+    default='/data/project/predict_stereotype/results/HCP/lists/sublist_allbehavior.csv')
+parser.add_argument(
+    '--csv', help='FreeSurfer CSV.',
+    default='/data/project/predict_stereotype/datasets/HCP_YA_csv/FreeSurfer_jingweili_6_20_2023_1200subjects.csv')
+parser.add_argument(
+    '--outdir', help='Output directory.',
+    default='/data/project/predict_stereotype/results/HCP/lists')
 args = parser.parse_args()
 
 # make output directory
@@ -26,7 +32,7 @@ df = df[['Subject', 'FS_LH_Defect_Holes', 'FS_RH_Defect_Holes']]
 lh_euler = np.array(2 - 2 * df.FS_LH_Defect_Holes)
 rh_euler = np.array(2 - 2 * df.FS_RH_Defect_Holes)
 
-outbase = os.path.basename(args.subj_ls)
+outbase = 'allsub.txt'
 lh_out = os.path.join(args.outdir, 'lh_Euler.' + outbase)
 rh_out = os.path.join(args.outdir, 'rh_Euler.' + outbase)
 with open(lh_out, 'w') as f:
