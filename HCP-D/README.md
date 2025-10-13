@@ -44,7 +44,7 @@ python3 HCP-D_collect_FD.py ${proj_dir}/results/HCP-D/lists/FD.allsub.txt \
 python3 HCP-D_collect_ICV.sh -outdir ${proj_dir}/results/HCP-D/lists -outbase_suffix allsub
 ```
 
-4. Confounds: age, sex, site, education (saved together wigh DVARS, FD, and ICV)
+4. Confounds: age, sex, site, education (saved together with DVARS, FD, and ICV)
 
 ```bash
 python3 HCP-D_extract_targets_confounds.py \
