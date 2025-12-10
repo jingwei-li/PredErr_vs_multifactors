@@ -21,6 +21,9 @@ function scatter_PredErr_vs_covariate(err_avg, Ydata, outdir, outbase, Xlabels, 
         Xdata = Xdata(top_err_idx);
         Ydata_c = Ydata_c(top_err_idx);
 
+        Xdata = reallog(Xdata);
+        Ydata_c = reallog(Ydata_c);
+
         subplot(row, col, c);
         scatter_kde(Xdata, Ydata_c, 'MarkerSize', sz, 'filled');
 
@@ -32,9 +35,8 @@ function scatter_PredErr_vs_covariate(err_avg, Ydata, outdir, outbase, Xlabels, 
         plot(xpoints, r, 'k', 'LineWidth', 2)
         hold off
 
-        [rho, pval] = corr(Xdata, Ydata_c);
         [s_rho, s_pval] = corr(Xdata, Ydata_c, 'Type', 'Spearman');
-        title(sprintf('X- vs Y-axes Peason''s r: %.3f, p value: %.2e\n Spearman rho: %.3f, p value: %.2e', rho, pval, s_rho, s_pval))
+        title(sprintf('Spearman rho: %.3f, p value: %.2e', s_rho, s_pval))
 
         xlabel_c = strcat("Absolute prediction error of ", Xlabels{c});
         xlabel(xlabel_c, 'fontsize', 12)

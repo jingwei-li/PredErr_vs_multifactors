@@ -16,7 +16,7 @@ function heatmap_covariates_corr(input_mat, figout)
 %     Filename of output figure, without extension.
 %
 
-addpath(genpath(fullfile(fileparts(mfilename('fullpath')), 'external_packages', 'fig_util')))
+addpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 load(input_mat)
 
@@ -83,6 +83,6 @@ set(gcf, 'color', 'w')
 hgexport(f, figout)
 close
 
-rmpath(genpath(fullfile(fileparts(mfilename('fullpath')), 'external_packages', 'fig_util')))
+rmpath(genpath(fullfile(fileparts(fileparts(mfilename('fullpath'))), 'external_packages', 'fig_util')))
 
 end

@@ -105,7 +105,6 @@ for train_index, test_index in splits:
 
 
 print("Average Model Accuracy:", acc_sum/args.n_outer_splits)
-input("Press Enter to continue...")
 
 with open(args.acc_out, 'w') as f:
     f.write(f"{acc_sum/args.n_outer_splits}")

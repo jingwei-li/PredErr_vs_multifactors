@@ -129,7 +129,7 @@ colloq_txt=${proj_dir}/scripts/PredErr_vs_multifactors/ABCD/lists/colloquial_lis
 pred_dir=${proj_dir}/results/ABCD/cbpp/4278sub_34behaviors
 for method in SVR KRR; do
     outmat=${proj_dir}/results/ABCD/cbpp/4278sub_34behaviors/avg_PredErr_${method}.mat
-    clscsv=${proj_dir}/results/ABCD/lists/behavior_cls_${method}_above0.4.csv
+    clscsv=${proj_dir}/results/ABCD/lists/behavior_cls_${method}_above0.3.csv
     matlab914 -nojvm -singleCompThread \
         -batch "avg_PredErr('ABCD', '$method', '$pred_dir', '$colloq_txt', '$clscsv', '$outmat'')"
 done

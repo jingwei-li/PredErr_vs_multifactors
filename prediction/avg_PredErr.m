@@ -21,7 +21,7 @@ function avg_PredErr(dataset, method, cbpp_dir, colloq_txt, bhvr_cls_csv, PredEr
             idx = find(strcmp(filestems, bhvr_cls{b}));
             fprintf("   %i: %s -> %i: %s\n", b, bhvr_cls{b}, idx, filestems{idx})
             load(fullfile(cbpp_dir, strcat('wbCBPP_', method, '_standard_', filestems{idx}, '_SchMel4.mat')));
-            err_norm.(headers{c}) = [err_norm.(headers{c}) all_err.err(:,idx) ./ std(yt, 1)];
+            err_norm.(headers{c}) = [err_norm.(headers{c}) all_err.err(:,idx) ./ std(yt, 1, 'omitmissing')];
         end
 
         err_avg.(headers{c}) = mean(abs(err_norm.(headers{c})), 2, "omitnan");

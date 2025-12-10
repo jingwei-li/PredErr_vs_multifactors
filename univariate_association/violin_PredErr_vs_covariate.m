@@ -33,6 +33,8 @@ function violin_PredErr_vs_covariate(err_avg, Xdata, outdir, outbase, Ylabels, X
         Xdata_cut = Xdata_cut(top_err_idx);
         curr_err = curr_err(top_err_idx);
 
+        curr_err = reallog(curr_err);
+
         Xclasses = unique(Xdata_cut);
         maxL = 0;
         for c2 = 1:length(Xclasses)

@@ -1,4 +1,4 @@
-function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, outdir)
+function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, outdir, subsample)
     % Set-up
     load(fullfile(cbpp_dir, strcat("avg_PredErr_", method, ".mat")));
     conf = readtable(fullfile(list_dir, strcat(dataset, "_conf_split.csv")), "VariableNamingRule", "preserve");
@@ -17,9 +17,15 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
             Xlabels = {'Social Cognition', 'Negative / Positive Feelings', 'Emotion Recognition', ...
                 'Positive Affect'};
         end
+        bhvr_cls_csv = fullfile(list_dir, strcat("behavior_cls_", method, "_above0.3.csv"));
     elseif strcmp(dataset, "ABCD")
         subjects = regexprep(conf.participant_id, "sub-NDAR", "NDAR_");
-        Xlabels = {'Verbal Memory', 'Cognition', 'Mental Rotation', 'CBCL', 'Prodromal Psychosis'};
+        Xlabels = {'Verbal Memory', 'Cognition', 'CBCL', 'Prodromal Psychosis'};
+        bhvr_cls_csv = fullfile(list_dir, strcat("behavior_cls_", method, "_above0.3.csv"));
+    end
+    if strcmp(dataset, "HCP") | strcmp(dataset, "ABCD")
+        T = readtable(bhvr_cls_csv, "Delimiter", ",", "headerlines", 0);
+        bhvr_cls_names = T.Properties.VariableNames;
     end
 
     %%% Euler
@@ -29,7 +35,8 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
     rh_euler = dlmread(fullfile(list_dir, "rh_Euler.allsub.txt"));
     covar = (lh_euler + rh_euler) / 2;
 
-    % For HCP-D and ABCD, center within each site, take square root, then multiply by -1
+    % For HCP-D and ABCD, center within each site
+    % Make sure all values are >=1 for log-transform
     if strcmp(dataset, "HCP-D")
         site = conf.site_Harvard + 2 * conf.site_UCLA + 3 * conf.site_UMinn + 4 * conf.site_WashU;
         site = arrayfun(@num2str, site, "UniformOutput", 0);
@@ -44,19 +51,38 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
             euler_site = covar(strcmp(site, sites{s}));
             euler_proc(strcmp(site, sites{s})) = euler_site - median(euler_site);
         end
-        covar = euler_proc;
+        covar = -(euler_proc - max(euler_proc)) + 1;
+    else
+        covar = -covar + 1;
     end
     scatter_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label);
+
+    % subsampling in ABCD and HCP-YA
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "continuous", bhvr_cls_names, outbase, outdir);
+        end
+    end
 
     %%% ICV
     label = "Intracranial volume";
     outbase = strcat("ICV_", method);
     scatter_PredErr_vs_covariate(err_avg, conf.ICV, outdir, outbase, Xlabels, label);
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, conf.ICV, "continuous", bhvr_cls_names, outbase, outdir);
+        end
+    end
 
     %%% FD
     label = "Framewise displacement";
     outbase = strcat("FD_", method);
     scatter_PredErr_vs_covariate(err_avg, conf.FD, outdir, outbase, Xlabels, label);
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, conf.FD, "continuous", bhvr_cls_names, outbase, outdir);
+        end
+    end
 
     %%% Age
     label = "Age";
@@ -67,6 +93,11 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
         covar = conf.Age_in_Yrs;
     end
     scatter_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label);
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "continuous", bhvr_cls_names, outbase, outdir);
+        end
+    end
 
     %%% Sex/gender
     label = "Sex/gender";
@@ -78,6 +109,11 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
     end
     XTickLabel = {"M", "F"};
     violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "categorical", bhvr_cls_names, outbase, outdir);
+        end
+    end
 
     %%% Ethnicity/race
     label = "Ethnicity/race";
@@ -93,7 +129,7 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
         XTickLabel = unique(covar);
     elseif strcmp(dataset, "ABCD")
         race = readtable(fullfile(data_dir, "acspsw03.txt"));
-        [~, ~, idx] = intersect(subjects, race.src_subjejct_id, 'stable');
+        [~, ~, idx] = intersect(subjects, race.src_subject_id, 'stable');
         covar = race.race_ethnicity(idx);
         XTickLabel = {'White', 'Black', 'Hispanic', 'Asian', 'Other'};
     end
@@ -106,6 +142,12 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
         covar = race;
     end
     violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel); 
+
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "categorical", bhvr_cls_names, outbase, outdir);
+        end
+    end
 
     %%% (Parent) education
     if strcmp(dataset, "HCP-D")
@@ -126,7 +168,7 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
             + 7 * (conf.("education_ASSOCIATE_DEGREE:_ACADEMIC_PROGRAM;") ...
             + conf.("education_ASSOCIATE_DEGREE:_OCCUPATIONAL_TECHNICAL_OR_VOCATIONA")) ...
             + 8 * conf.("education_BACHELOR'S_DEGREE_(EXAMPLE:_BA_AB_BS_BBA);");
-            violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
+        violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
 
     elseif strcmp(dataset, "HCP")
         label = "Education in years";
@@ -135,7 +177,10 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
         covar = conf.("Educ_11.0") + 2 * conf.("Educ_12.0") + 3 * conf.("Educ_13.0") ...
             + 4 * conf.("Educ_14.0") + 5 * conf.("Educ_15.0") + 6 * conf.("Educ_16.0") ...
             + 7 * conf.("Educ_17.0");
-            violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
+        violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "categorical", bhvr_cls_names, outbase, outdir);
+        end
 
     elseif strcmp(dataset, "ABCD")
         label = "Parent's degree";
@@ -145,34 +190,37 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
             'Doctoral degree'};
         % Remember to check availability later
         outbase = strcat("p1educ_", method);
-        covar = abcd_conf.("prnt_ed_0.0") ...
-            + 1 * (abcd_conf.("prnt_ed_1.0") + abcd_conf.("prnt_ed_2.0") ...
-            + abcd_conf.("prnt_ed_3.0") + abcd_conf.("prnt_ed_4.0") + abcd_conf.("prnt_ed_5.0")) ...
-            + 2 * (abcd_conf.("prnt_ed_6.0") + abcd_conf.("prnt_ed_7.0") ...
-            + abcd_conf.("prnt_ed_8.0")) ...
-            + 3 * (abcd_conf.("prnt_ed_9.0") + abcd_conf.("prnt_ed_10.0") ...
-            + abcd_conf.("prnt_ed_11.0") + abcd_conf.("prnt_ed_12.0")) ...
-            + 4 * (abcd_conf.("prnt_ed_13.0") + abcd_conf.("prnt_ed_14.0")) ...
-            + 5 * abcd_conf.("prnt_ed_15.0") ...
-            + 6 * (abcd_conf.("prnt_educ_16.0") + abcd_conf.("prnt_educ_17.0")) ...
-            + 7 * abcd_conf.("prnt_educ_18.0") + 8 * abcd_conf.("prnt_educ_19.0") ...
-            + 9 * abcd_conf.("prnt_educ_20.0") + 10 * abcd_conf.("prnt_educ_21.0");
+        covar = 1 * (conf.("prnt_ed_1.0") + conf.("prnt_ed_3.0") + conf.("prnt_ed_4.0") ...
+            + conf.("prnt_ed_5.0")) ...
+            + 2 * (conf.("prnt_ed_6.0") + conf.("prnt_ed_7.0") + conf.("prnt_ed_8.0")) ...
+            + 3 * (conf.("prnt_ed_9.0") + conf.("prnt_ed_10.0") + conf.("prnt_ed_11.0") ...
+            + conf.("prnt_ed_12.0")) ...
+            + 4 * (conf.("prnt_ed_13.0") + conf.("prnt_ed_14.0")) ...
+            + 5 * conf.("prnt_ed_15.0") ...
+            + 6 * (conf.("prnt_ed_16.0") + conf.("prnt_ed_17.0")) ...
+            + 7 * conf.("prnt_ed_18.0") + 8 * conf.("prnt_ed_19.0") ...
+            + 9 * conf.("prnt_ed_20.0") + 10 * conf.("prnt_ed_21.0");
         violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "categorical", bhvr_cls_names, outbase, outdir);
+        end
 
         outbase = strcat("p2educ_", method);
-        covar = abcd_conf.("prtnr_ed_0.0") ...
-            + 1 * (abcd_conf.("prtnr_ed_1.0") + abcd_conf.("prtnr_ed_2.0") ...
-            + abcd_conf.("prtnr_ed_3.0") + abcd_conf.("prtnr_ed_4.0") + abcd_conf.("prtnr_ed_5.0")) ...
-            + 2 * (abcd_conf.("prtnr_ed_6.0") + abcd_conf.("prtnr_ed_7.0") ...
-            + abcd_conf.("prtnr_ed_8.0")) ...
-            + 3 * (abcd_conf.("prtnr_ed_9.0") + abcd_conf.("prtnr_ed_10.0") ...
-            + abcd_conf.("prtnr_ed_11.0") + abcd_conf.("prtnr_ed_12.0")) ...
-            + 4 * (abcd_conf.("prtnr_ed_13.0") + abcd_conf.("prtnr_ed_14.0")) ...
-            + 5 * abcd_conf.("prtnr_ed_15.0") ...
-            + 6 * (abcd_conf.("prtnr_educ_16.0") + abcd_conf.("prtnr_educ_17.0")) ...
-            + 7 * abcd_conf.("prtnr_educ_18.0") + 8 * abcd_conf.("prtnr_educ_19.0") ...
-            + 9 * abcd_conf.("prtnr_educ_20.0") + 10 * abcd_conf.("prtnr_educ_21.0");
+        covar = conf.("prtnr_ed_0.0") ...
+            + 1 * (conf.("prtnr_ed_1.0") + conf.("prtnr_ed_3.0") + conf.("prtnr_ed_4.0") ...
+            + conf.("prtnr_ed_5.0")) ...
+            + 2 * (conf.("prtnr_ed_6.0") + conf.("prtnr_ed_7.0") + conf.("prtnr_ed_8.0")) ...
+            + 3 * (conf.("prtnr_ed_9.0") + conf.("prtnr_ed_10.0") + conf.("prtnr_ed_11.0") ...
+            + conf.("prtnr_ed_12.0")) ...
+            + 4 * (conf.("prtnr_ed_13.0") + conf.("prtnr_ed_14.0")) ...
+            + 5 * conf.("prtnr_ed_15.0") ...
+            + 6 * (conf.("prtnr_ed_16.0") + conf.("prtnr_ed_17.0")) ...
+            + 7 * conf.("prtnr_ed_18.0") + 8 * conf.("prtnr_ed_19.0") ...
+            + 9 * conf.("prtnr_ed_20.0") + 10 * conf.("prtnr_ed_21.0");
         violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "categorical", bhvr_cls_names, outbase, outdir);
+        end
     end
 
     %%% Household income
@@ -181,6 +229,7 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
     if strcmp(dataset, "HCP-D")
         covar = sociodemo.annual_fam_inc(sociodemo_idx);
         covar(covar == -999999) = nan;
+        covar = covar + 1; % avoid -Inf from log-transformation
         scatter_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label);
 
     elseif strcmp(dataset, "HCP")
@@ -193,9 +242,16 @@ function PredErr_vs_covariate(dataset, method, cbpp_dir, list_dir, data_dir, out
         XTickLabel = {'Refuse ans', '<$5k', '$5k-12k', '$12k-16k', '$16k-25k', ...
             '$25k-35k', '$35k-50k', '$50k-75k', '$75k-100k', '$100k-200k', '>=$200k'};
         income = readtable(fullfile(data_dir, "pdem02.txt"));
-        [~, ~, idx] = intersect(subjects, income.src_subjejct_id, 'stable');
+        [~, ~, idx] = intersect(subjects, income.src_subject_id, 'stable');
         covar = income.demo_comb_income_v2(idx);
         covar(covar == 999) = nan;
         covar(covar == 777) = 0; % Refuse to answer
         violin_PredErr_vs_covariate(err_avg, covar, outdir, outbase, Xlabels, label, XTickLabel);
     end
+
+    if strcmp(dataset, "ABCD") | strcmp(dataset, "HCP")
+        if subsample == 1
+            subsample_PredErr_vs_covariate(err_avg, covar, "categorical", bhvr_cls_names, outbase, outdir);
+        end
+    end
+end
