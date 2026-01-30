@@ -88,9 +88,13 @@ function covariate_association(dataset, list_dir, data_dir, outdir)
 
     
     % Correlation between continuous variables
-    % (Euler characteristic, ICV, FD, age)
-    continuous.corr = ones(4,4);
-    continuous.names = {'Euler', 'ICV', 'FD', 'Age'};
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        continuous.corr = ones(4,4);
+        continuous.names = {'Euler', 'ICV', 'FD', 'Age'};
+    elseif strcmp(dataset, "HCP-D")
+        continuous.corr = ones(5,5);
+        continuous.names = {'Euler', 'ICV', 'FD', 'Age', 'income'};
+    end
 
     idx = isnan(euler) | isnan(ICV);
     continuous.corr(1,2) = corr(euler(~idx), ICV(~idx));
@@ -104,6 +108,12 @@ function covariate_association(dataset, list_dir, data_dir, outdir)
     continuous.corr(1,4) = corr(euler(~idx), age(~idx));
     continuous.corr(4,1) = continuous.corr(1,4);
 
+    if strcmp(dataset, "HCP-D")
+        idx = isnan(euler) | isnan(income);
+        continuous.corr(1, 5) = corr(euler(~idx), income(~idx));
+        continuous.corr(5, 1) = continuous.corr(1, 5);
+    end
+
     idx = isnan(ICV) | isnan(FD);
     continuous.corr(2,3) = corr(ICV(~idx), FD(~idx));
     continuous.corr(3,2) = continuous.corr(2,3);
@@ -112,72 +122,138 @@ function covariate_association(dataset, list_dir, data_dir, outdir)
     continuous.corr(2,4) = corr(ICV(~idx), age(~idx));
     continuous.corr(4,2) = continuous.corr(2,4);
 
+    if strcmp(dataset, "HCP-D")
+        idx = isnan(ICV) | isnan(income);
+        continuous.corr(2, 5) = corr(ICV(~idx), income(~idx));
+        continuous.corr(5, 2) = continuous.corr(2, 5);
+    end
+
     idx = isnan(FD) | isnan(age);
     continuous.corr(3,4) = corr(FD(~idx), age(~idx));
     continuous.corr(4,3) = continuous.corr(3,4);
 
+    if strcmp(dataset, "HCP-D")
+        idx = isnan(FD) | isnan(income);
+        continuous.corr(3, 5) = corr(FD(~idx), income(~idx));
+        continuous.corr(5, 3) = continuous.corr(3, 5);
+
+        idx = isnan(age) | isnan(income);
+        continuous.corr(4, 5) = corr(age(~idx), income(~idx));
+        continuous.corr(5, 4) = continuous.corr(4, 5);
+    end
+
     % Cramer's V between categorical variables
-    % (education, ethnicity, sex, family income)
-    categoric.CramerV = ones(4,4);
-    categoric.names = {'Education', 'Ethnicity', 'Sex', 'Income'};
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        categoric.CramerV = ones(4,4);
+        categoric.names = {'Education', 'Ethnicity', 'Sex', 'Income'};
+    elseif strcmp(dataset, "HCP-D")
+        categoric.CramerV = ones(3,3);
+        categoric.names = {'Education', 'Ethnicity', 'Sex'};
+    end
 
     categoric.CramerV(1,2) = CramerV(outdir, cellstr(num2str(educ_num)), race);
     categoric.CramerV(2,1) = categoric.CramerV(1,2);
+
     categoric.CramerV(1,3) = CramerV(outdir, cellstr(num2str(educ_num)), cellstr(num2str(sex)));
     categoric.CramerV(3,1) = categoric.CramerV(1,3);
-    categoric.CramerV(1,4) = CramerV(outdir, cellstr(num2str(educ_num)), cellstr(num2str(income)));
-    categoric.CramerV(4,1) = categoric.CramerV(1,4);
+
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        categoric.CramerV(1,4) = CramerV(outdir, cellstr(num2str(educ_num)), cellstr(num2str(income)));
+        categoric.CramerV(4,1) = categoric.CramerV(1,4);
+    end
+
     categoric.CramerV(2,3) = CramerV(outdir, race, cellstr(num2str(sex)));
     categoric.CramerV(3,2) = categoric.CramerV(2,3);
-    categoric.CramerV(2,4) = CramerV(outdir, race, cellstr(num2str(income)));
-    categoric.CramerV(4,2) = categoric.CramerV(2,4);
-    categoric.CramerV(3,4) = CramerV(outdir, cellstr(num2str(sex)), cellstr(num2str(income)));
-    categoric.CramerV(4,3) = categoric.CramerV(3,4);
+
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        categoric.CramerV(2,4) = CramerV(outdir, race, cellstr(num2str(income)));
+        categoric.CramerV(4,2) = categoric.CramerV(2,4);
+        categoric.CramerV(3,4) = CramerV(outdir, cellstr(num2str(sex)), cellstr(num2str(income)));
+        categoric.CramerV(4,3) = categoric.CramerV(3,4);
+    end
 
     % Logistic regression between a continuous variable and a categorical variable
-    cont_cate.acc = nan(4,4);
-    cont_cate.names1 = {'Euler', 'ICV', 'FD', 'Age'};
-    cont_cate.names2 = {'Education', 'Ethnicity', 'Sex', 'Income'};
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        cont_cate.acc = nan(4,4);
+        cont_cate.names1 = {'Euler', 'ICV', 'FD', 'Age'};
+        cont_cate.names2 = {'Education', 'Ethnicity', 'Sex', 'Income'};
+    elseif strcmp(dataset, "HCP-D")
+        cont_cate.acc = nan(5,3);
+        cont_cate.names1 = {'Euler', 'ICV', 'FD', 'Age', 'Income'};
+        cont_cate.names2 = {'Education', 'Ethnicity', 'Sex'};
+    end
 
     % use Euler characteristic to predict (education, ethnicity, sex, family income)
     idx = isnan(euler) | isnan(educ_num) | cellfun(@isempty, site);
     cont_cate.acc(1,1) = LogisticReg(outdir, euler(~idx), cellstr(num2str(educ_num(~idx))), site(~idx));
+
     idx = isnan(euler) | cellfun(@isempty, race) | cellfun(@isempty, site);
     cont_cate.acc(1,2) = LogisticReg(outdir, euler(~idx), race(~idx), site(~idx));
+
     idx = isnan(euler) | isnan(sex) | cellfun(@isempty, site);
     cont_cate.acc(1,3) = LogisticReg(outdir, euler(~idx), cellstr(num2str(sex(~idx))), site(~idx));
-    idx = isnan(euler) | isnan(income) | cellfun(@isempty, site);
-    cont_cate.acc(1,4) = LogisticReg(outdir, euler(~idx), cellstr(num2str(income(~idx))), site(~idx));
+
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        idx = isnan(euler) | isnan(income) | cellfun(@isempty, site);
+        cont_cate.acc(1,4) = LogisticReg(outdir, euler(~idx), cellstr(num2str(income(~idx))), site(~idx));
+    end
 
     % use ICV to predict (education, ethnicity, sex, family income)
     idx = isnan(ICV) | isnan(educ_num) | cellfun(@isempty, site);
     cont_cate.acc(2,1) = LogisticReg(outdir, ICV(~idx), cellstr(num2str(educ_num(~idx))), site(~idx));
+
     idx = isnan(ICV) | cellfun(@isempty, race) | cellfun(@isempty, site);
     cont_cate.acc(2,2) = LogisticReg(outdir, ICV(~idx), race(~idx), site(~idx));
+
     idx = isnan(ICV) | isnan(sex)  | cellfun(@isempty, site);
     cont_cate.acc(2,3) = LogisticReg(outdir, ICV(~idx), cellstr(num2str(sex(~idx))), site(~idx));
-    idx = isnan(ICV) | isnan(income) | cellfun(@isempty, site);
-    cont_cate.acc(2,4) = LogisticReg(outdir, ICV(~idx), cellstr(num2str(income(~idx))), site(~idx));
+
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        idx = isnan(ICV) | isnan(income) | cellfun(@isempty, site);
+        cont_cate.acc(2,4) = LogisticReg(outdir, ICV(~idx), cellstr(num2str(income(~idx))), site(~idx));
+    end
 
     % use FD to predict (education, ethnicity, sex, family income)
     idx = isnan(FD) | isnan(educ_num) | cellfun(@isempty, site);
     cont_cate.acc(3,1) = LogisticReg(outdir, FD(~idx), cellstr(num2str(educ_num(~idx))), site(~idx));
+
     idx = isnan(FD) | cellfun(@isempty, race) | cellfun(@isempty, site);
     cont_cate.acc(3,2) = LogisticReg(outdir, FD(~idx), race(~idx), site(~idx));
+
     idx = isnan(FD) | isnan(sex)  | cellfun(@isempty, site);
     cont_cate.acc(3,3) = LogisticReg(outdir, FD(~idx), cellstr(num2str(sex(~idx))), site(~idx));
-    idx = isnan(FD) | isnan(income) | cellfun(@isempty, site);
-    cont_cate.acc(3,4) = LogisticReg(outdir, FD(~idx), cellstr(num2str(income(~idx))), site(~idx));
+
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        idx = isnan(FD) | isnan(income) | cellfun(@isempty, site);
+        cont_cate.acc(3,4) = LogisticReg(outdir, FD(~idx), cellstr(num2str(income(~idx))), site(~idx));
+    end
 
     % use age to predict (education, ethnicity, sex, family income)
     idx = isnan(age) | isnan(educ_num) | cellfun(@isempty, site);
     cont_cate.acc(4,1) = LogisticReg(outdir, age(~idx), cellstr(num2str(educ_num(~idx))), site(~idx));
+
     idx = isnan(age) | cellfun(@isempty, race) | cellfun(@isempty, site);
     cont_cate.acc(4,2) = LogisticReg(outdir, age(~idx), race(~idx), site(~idx));
+
     idx = isnan(age) | isnan(sex)  | cellfun(@isempty, site);
     cont_cate.acc(4,3) = LogisticReg(outdir, age(~idx), cellstr(num2str(sex(~idx))), site(~idx));
-    idx = isnan(age) | isnan(income) | cellfun(@isempty, site);
-    cont_cate.acc(4,4) = LogisticReg(outdir, age(~idx), cellstr(num2str(income(~idx))), site(~idx));
+
+    if strcmp(dataset, "HCP") || strcmp(dataset, "ABCD")
+        idx = isnan(age) | isnan(income) | cellfun(@isempty, site);
+        cont_cate.acc(4,4) = LogisticReg(outdir, age(~idx), cellstr(num2str(income(~idx))), site(~idx));
+    end
+
+    % use income to predict (education, ethnicity, sex)
+    if strcmp(dataset, "HCP-D")
+        idx = isnan(income) | isnan(educ_num) | cellfun(@isempty, site);
+        cont_cate.acc(5,1) = LogisticReg(outdir, income(~idx), cellstr(num2str(educ_num(~idx))), site(~idx));
+
+        idx = isnan(income) | cellfun(@isempty, race) | cellfun(@isempty, site);
+        cont_cate.acc(5,2) = LogisticReg(outdir, income(~idx), race(~idx), site(~idx));
+
+        idx = isnan(income) | isnan(sex)  | cellfun(@isempty, site);
+        cont_cate.acc(5,3) = LogisticReg(outdir, income(~idx), cellstr(num2str(sex(~idx))), site(~idx));
+    end
 
     save(fullfile(outdir, 'covar_assoc.mat'), 'continuous', 'categoric', 'cont_cate');
 

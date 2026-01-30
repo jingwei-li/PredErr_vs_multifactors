@@ -1,5 +1,4 @@
 function heatmap_covariates_corr(input_mat, figout)
-
 % heatmap_covariates_corr(input_mat, figout)
 %
 % Plot three matrices in one figure: correlation among continuous covariates,
@@ -32,12 +31,12 @@ set(colorTitleHandle, 'String', 'Absolute Pearson''s correlation', 'fontsize', 1
 clim([0,1])
 set(gca, 'XTick', [1:length(continuous.names)])
 set(gca, 'YTick', [1:length(continuous.names)])
-set(gca, 'XTickLabel', continuous.names, 'YTickLabel', continuous.names, 'fontsize', 13)
+set(gca, 'XTickLabel', continuous.names, 'YTickLabel', continuous.names, 'fontsize', 12)
 rotateXLabels( gca(), 30 );
 
 for i = 1:length(continuous.names)-1
     for j = (i+1):length(continuous.names)
-        text(i-0.3, j, sprintf('%.4f', continuous.corr(i,j)), 'fontsize', 13)
+        text(i-0.3, j, sprintf('%.3f', continuous.corr(i,j)), 'fontsize', 10, 'Color', 'w')
     end
 end
 
@@ -50,12 +49,12 @@ set(colorTitleHandle, 'String', 'Cramer''s V', 'fontsize', 12);
 clim([0,1])
 set(gca, 'XTick', [1:length(categoric.names)])
 set(gca, 'YTick', [1:length(categoric.names)])
-set(gca, 'XTickLabel', categoric.names, 'YTickLabel', categoric.names, 'fontsize', 13)
+set(gca, 'XTickLabel', categoric.names, 'YTickLabel', categoric.names, 'fontsize', 12)
 rotateXLabels( gca(), 30 );
 
 for i = 1:length(categoric.names)-1
     for j = (i+1):length(categoric.names)
-        text(i-0.3, j, sprintf('%.4f', categoric.CramerV(i,j)), 'fontsize', 13)
+        text(i-0.3, j, sprintf('%.3f', categoric.CramerV(i,j)), 'fontsize', 10, 'Color', 'w')
     end
 end
 
@@ -68,12 +67,12 @@ set(colorTitleHandle, 'String', 'Logistic regression accuracy', 'fontsize', 12);
 clim([0,1])
 set(gca, 'XTick', [1:length(cont_cate.names2)])
 set(gca, 'YTick', [1:length(cont_cate.names1)])
-set(gca, 'XTickLabel', cont_cate.names2, 'YTickLabel', cont_cate.names1, 'fontsize', 13)
+set(gca, 'XTickLabel', cont_cate.names2, 'YTickLabel', cont_cate.names1, 'fontsize', 12)
 rotateXLabels( gca(), 30 );
 
 for i = 1:length(cont_cate.names1)
     for j = 1:length(cont_cate.names2)
-        text(j-0.3, i, sprintf('%.4f', cont_cate.acc(i,j)), 'fontsize', 13)
+        text(j-0.3, i, sprintf('%.3f', cont_cate.acc(i,j)), 'fontsize', 10, 'Color', 'w')
     end
 end
 

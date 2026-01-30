@@ -5,8 +5,9 @@
 args <- commandArgs(trailingOnly = TRUE)
 
 # Get the input filename and output filename
-inputFilename <- args[1]
-outputDir <- args[2]
+method <- args[1]
+inputFilename <- args[2]
+outputDir <- args[3]
 
 data <- read.csv(inputFilename)
 
@@ -20,8 +21,8 @@ data$FD = scale(data$FD)
 
 # index education, income, ethnicity columns
 educ_idx <- grep("educ_", colnames(data))
-income_idx <- grep("income_", colnames(data))
-ethnicity_idx <- grep("ethnicity_", colnames(data))
+income_idx <- grep("income", colnames(data))
+ethnicity_idx <- grep("race_", colnames(data))
 
 for (n in 1:Nerr) {
     print(paste('GLM models for behavioral group', toString(n)))
@@ -41,7 +42,7 @@ for (n in 1:Nerr) {
 
     # build full model
     fullModel <- glm(fullModelFormula, family = "gaussian", data = data)
-    outFullModel = file.path(outputDir, paste('err', toString(n), '_combine_full_model.csv', sep = ""))
+    outFullModel = file.path(outputDir, paste(method, '_err', toString(n), '_full_model.csv', sep = ""))
     write.csv(coef(summary(fullModel)), outFullModel)
     print(fullModel)
 
@@ -69,9 +70,9 @@ for (n in 1:Nerr) {
     # build model without Euler characteristic
     modelNoEuler <- glm(noEulerFormula, family = "gaussian", data = data)
     lr_test_euler <- anova(fullModel, modelNoEuler, test = "LRT")
-    outModelNoEuler = file.path(outputDir, paste('err', toString(n), '_combine_model_no_Euler.csv', sep = ""))
+    outModelNoEuler = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_Euler.csv', sep = ""))
     write.csv(coef(summary(modelNoEuler)), outModelNoEuler)
-    outImportanceEuler = file.path(outputDir, paste('err', toString(n), '_combine_importance_Euler.csv', sep = ""))
+    outImportanceEuler = file.path(outputDir, paste(method, '_err', toString(n), '_importance_Euler.csv', sep = ""))
     write(lr_test_euler$"Pr(>Chi)"[2], file=outImportanceEuler)
     noEuler_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoEuler), 
                            df.residual(nullModel)-df.residual(modelNoEuler), lower.tail=FALSE)
@@ -93,9 +94,9 @@ for (n in 1:Nerr) {
     # build model without ICV
     modelNoICV <- glm(noICVFormula, family = "gaussian", data = data)
     lr_test_ICV <- anova(fullModel, modelNoICV, test = "LRT")
-    outModelNoICV = file.path(outputDir, paste('err', toString(n), '_combine_model_no_ICV.csv', sep = ""))
+    outModelNoICV = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_ICV.csv', sep = ""))
     write.csv(coef(summary(modelNoICV)), outModelNoICV)
-    outImportanceICV = file.path(outputDir, paste('err', toString(n), '_combine_importance_ICV.csv', sep = ""))
+    outImportanceICV = file.path(outputDir, paste(method, '_err', toString(n), '_importance_ICV.csv', sep = ""))
     write(lr_test_ICV$"Pr(>Chi)"[2], file=outImportanceICV)
     noICV_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoICV), 
                            df.residual(nullModel)-df.residual(modelNoICV), lower.tail=FALSE)
@@ -117,9 +118,9 @@ for (n in 1:Nerr) {
     # build model without FD
     modelNoFD <- glm(noFDFormula, family = "gaussian", data = data)
     lr_test_FD <- anova(fullModel, modelNoFD, test = "LRT")
-    outModelNoFD = file.path(outputDir, paste('err', toString(n), '_combine_model_no_FD.csv', sep = ""))
+    outModelNoFD = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_FD.csv', sep = ""))
     write.csv(coef(summary(modelNoFD)), outModelNoFD)
-    outImportanceFD = file.path(outputDir, paste('err', toString(n), '_combine_importance_FD.csv', sep = ""))
+    outImportanceFD = file.path(outputDir, paste(method, '_err', toString(n), '_importance_FD.csv', sep = ""))
     write(lr_test_FD$"Pr(>Chi)"[2], file=outImportanceFD)
     noFD_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoFD), 
                            df.residual(nullModel)-df.residual(modelNoFD), lower.tail=FALSE)
@@ -141,9 +142,9 @@ for (n in 1:Nerr) {
     # build model without age
     modelNoAge <- glm(noAgeFormula, family = "gaussian", data = data)
     lr_test_age <- anova(fullModel, modelNoAge, test = "LRT")
-    outModelNoAge = file.path(outputDir, paste('err', toString(n), '_combine_model_no_age.csv', sep = ""))
+    outModelNoAge = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_age.csv', sep = ""))
     write.csv(coef(summary(modelNoAge)), outModelNoAge)
-    outImportanceAge = file.path(outputDir, paste('err', toString(n), '_combine_importance_age.csv', sep = ""))
+    outImportanceAge = file.path(outputDir, paste(method, '_err', toString(n), '_importance_age.csv', sep = ""))
     write(lr_test_age$"Pr(>Chi)"[2], file=outImportanceAge)
     noAge_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoAge), 
                            df.residual(nullModel)-df.residual(modelNoAge), lower.tail=FALSE)
@@ -165,9 +166,9 @@ for (n in 1:Nerr) {
     # build model without sex
     modelNoSex <- glm(noSexFormula, family = "gaussian", data = data)
     lr_test_sex <- anova(fullModel, modelNoSex, test = "LRT")
-    outModelNoSex = file.path(outputDir, paste('err', toString(n), '_combine_model_no_sex.csv', sep = ""))
+    outModelNoSex = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_sex.csv', sep = ""))
     write.csv(coef(summary(modelNoSex)), outModelNoSex)
-    outImportanceSex = file.path(outputDir, paste('err', toString(n), '_combine_importance_sex.csv', sep = ""))
+    outImportanceSex = file.path(outputDir, paste(method, '_err', toString(n), '_importance_sex.csv', sep = ""))
     write(lr_test_sex$"Pr(>Chi)"[2], file=outImportanceSex)
     noSex_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoSex), 
                            df.residual(nullModel)-df.residual(modelNoSex), lower.tail=FALSE)
@@ -186,9 +187,9 @@ for (n in 1:Nerr) {
     # build model without education
     modelNoEduc <- glm(noEducFormula, family = "gaussian", data = data)
     lr_test_educ <- anova(fullModel, modelNoEduc, test = "LRT")
-    outModelNoEduc = file.path(outputDir, paste('err', toString(n), '_combine_model_no_educ.csv', sep = ""))
+    outModelNoEduc = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_educ.csv', sep = ""))
     write.csv(coef(summary(modelNoEduc)), outModelNoEduc)
-    outImportanceEduc = file.path(outputDir, paste('err', toString(n), '_combine_importance_educ.csv', sep = ""))
+    outImportanceEduc = file.path(outputDir, paste(method, '_err', toString(n), '_importance_educ.csv', sep = ""))
     write(lr_test_educ$"Pr(>Chi)"[2], file=outImportanceEduc)
     noEduc_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoEduc), 
                             df.residual(nullModel)-df.residual(modelNoEduc), lower.tail=FALSE)
@@ -207,9 +208,9 @@ for (n in 1:Nerr) {
     # build model without income
     modelNoIncome <- glm(noIncomeFormula, family = "gaussian", data = data)
     lr_test_income <- anova(fullModel, modelNoIncome, test = "LRT")
-    outModelNoIncome = file.path(outputDir, paste('err', toString(n), '_combine_model_no_income.csv', sep = ""))
+    outModelNoIncome = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_income.csv', sep = ""))
     write.csv(coef(summary(modelNoIncome)), outModelNoIncome)
-    outImportanceIncome = file.path(outputDir, paste('err', toString(n), '_combine_importance_income.csv', sep = ""))
+    outImportanceIncome = file.path(outputDir, paste(method, '_err', toString(n), '_importance_income.csv', sep = ""))
     write(lr_test_income$"Pr(>Chi)"[2], file=outImportanceIncome)
     noIncome_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoIncome), 
                               df.residual(nullModel)-df.residual(modelNoIncome), lower.tail=FALSE)
@@ -228,9 +229,9 @@ for (n in 1:Nerr) {
     # build model without ethnicity
     modelNoEthn <- glm(noEthnFormula, family = "gaussian", data = data)
     lr_test_ethn <- anova(fullModel, modelNoEthn, test = "LRT")
-    outModelNoEthn = file.path(outputDir, paste('err', toString(n), '_combine_model_no_ethnicity.csv', sep = ""))
+    outModelNoEthn = file.path(outputDir, paste(method, '_err', toString(n), '_model_no_ethnicity.csv', sep = ""))
     write.csv(coef(summary(modelNoEthn)), outModelNoEthn)
-    outImportanceEthn = file.path(outputDir, paste('err', toString(n), '_combine_importance_ethnicity.csv', sep = ""))
+    outImportanceEthn = file.path(outputDir, paste(method, '_err', toString(n), '_importance_ethnicity.csv', sep = ""))
     write(lr_test_ethn$"Pr(>Chi)"[2], file=outImportanceEthn)
     noEthn_pchisq <- pchisq(deviance(nullModel) - deviance(modelNoEthn), 
                             df.residual(nullModel)-df.residual(modelNoEthn), lower.tail=FALSE)
@@ -252,10 +253,13 @@ for (n in 1:Nerr) {
                          AIC = c(AIC(fullModel), AIC(modelNoEuler), AIC(modelNoICV), AIC(modelNoFD), 
                          AIC(modelNoAge), AIC(modelNoEduc), AIC(modelNoEthn), AIC(modelNoIncome), 
                          AIC(modelNoSex)),
+                         BIC = c(BIC(fullModel), BIC(modelNoEuler), BIC(modelNoICV), BIC(modelNoFD), 
+                         BIC(modelNoAge), BIC(modelNoEduc), BIC(modelNoEthn), BIC(modelNoIncome), 
+                         BIC(modelNoSex)),
                          p_against_null = c(p_full$"Pr(>Chi)"[2], p_noEuler$"Pr(>Chi)"[2], 
                          p_noICV$"Pr(>Chi)"[2], p_noFD$"Pr(>Chi)"[2], p_noAge$"Pr(>Chi)"[2], 
                          p_noEduc$"Pr(>Chi)"[2], p_noEthn$"Pr(>Chi)"[2], 
                          p_noIncome$"Pr(>Chi)"[2], p_noSex$"Pr(>Chi)"[2]))
-    outGoodFit = file.path(outputDir, paste('err', toString(n), '_combine_goodness.csv', sep = ""))
+    outGoodFit = file.path(outputDir, paste(method, '_err', toString(n), '_goodness.csv', sep = ""))
     write.csv(goodfit, outGoodFit, row.names = FALSE)
 }
