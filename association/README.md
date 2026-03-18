@@ -40,7 +40,14 @@ for method in SVR KRR; do
 done
 ```
 
-Finally, see `plot_glm_parcats.ipynb` for the plotting of figures.
+#### Plotting bar plot for pseudo R2 of full models
+
+```bash
+python3 plot_glm_full_r2.py --out_dir ${proj_dir}/results --out_stem glm_full_goodness
+```
+
+
+Finally, see the notebooks `plot_glm_parcats.ipynb` and `univariate_association.ipynb` for the plotting of other figures.
 
 ### Covariate association
 #### HCP Development
