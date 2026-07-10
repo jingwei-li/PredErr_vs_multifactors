@@ -1,6 +1,7 @@
 from pathlib import Path
 import argparse
 
+from matplotlib.ticker import PercentFormatter
 from statsmodels.stats.multitest import multipletests
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -13,6 +14,8 @@ clusters = {
     "HCP": [
         "Social cognition", "Negative / positive feelings", "Emotion recognition",
         "Positive feelings"]}
+dataset_names = {
+    "ABCD": "ABCD (Pred)-Adolescence", "HCP-D": "HCP Development", "HCP": "HCP Young Adult"}
 
 parser = argparse.ArgumentParser(
     description="plot pseudo R2 for all full models in the GLM analysis",
@@ -34,9 +37,11 @@ for method in ["SVR", "KRR"]:
             p_curr = res_r2["p_against_null"].loc[res_r2["model"] == "Full model"].values[0]
     
             p_vals.append(p_curr)
-            res_curr = pd.DataFrame(
-                {"Behavioral cluster": f"{dataset} {cluster_name}", "Machine learning model": method, "pseudo R2": r2_curr, "P": p_curr},
-                index=[f"{method}_{dataset}_{cluster+1}"])
+            res_curr = {
+                "Behavioral cluster": f"{dataset_names[dataset]} {cluster_name}",
+                "Machine learning model": method, "Variance explained (pseudo R-squared)": r2_curr,
+                "P-value": p_curr}
+            res_curr = pd.DataFrame(res_curr, index=[f"{method}_{dataset}_{cluster+1}"])
             res.append(res_curr)
 res = pd.concat(res, axis="index")
 
@@ -46,9 +51,12 @@ res = res.assign(**{"P (adjusted)": h[1], "Rejected": h[0]})
 
 # Plot and save results
 sns.set_theme(style="white", context="paper", font_scale=1.5)
-sns.catplot(
-    kind="bar", data=res, x="pseudo R2", y="Behavioral cluster", hue="Machine learning model",
-    orient="h", palette=["white", "lightgray"], edgecolor="gray", height=8, aspect=1)
+g = sns.catplot(
+    kind="bar", data=res, x="Variance explained (pseudo R-squared)", y="Behavioral cluster",
+    hue="Machine learning model", orient="h", palette=["white", "lightgray"], edgecolor="gray",
+    height=8, aspect=1.2)
+for ax in g.axes.flat:
+    ax.xaxis.set_major_formatter(PercentFormatter(1))
 plt.savefig(Path(args.out_dir, f"{args.out_stem}.png"), dpi=500)
 res.to_csv(Path(args.out_dir, f"{args.out_stem}.csv"))
 

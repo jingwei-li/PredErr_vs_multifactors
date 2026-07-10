@@ -47,7 +47,7 @@ python3 plot_glm_full_r2.py --out_dir ${proj_dir}/results --out_stem glm_full_go
 ```
 
 
-Finally, see the notebooks `plot_glm_parcats.ipynb` and `univariate_association.ipynb` for the plotting of other figures.
+Finally, see `plot_glm_parcats.ipynb` for the plotting of figures.
 
 ### Covariate association
 #### HCP Development

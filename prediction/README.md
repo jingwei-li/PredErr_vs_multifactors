@@ -55,7 +55,7 @@ done
 ```
 
 ## Behavior clustering
-First, correlations between prediction errors for each pair of behavioral measures are computed. Then the categories of behavioral measures are determined and entered manually. Finally, the normalized average prediction errors are computed for each cateogry.
+First, correlations between prediction errors for each pair of behavioral measures are computed. Then the categories of behavioral measures are determined and entered manually. Plotting of clustering outcomes are done in `plot_err_corr_link.ipynb`. Finally, the normalized average prediction errors are computed for each cateogry.
 
 ### Correlation of prediction errors
 #### HCP Development
